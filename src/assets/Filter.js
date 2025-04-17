@@ -30,7 +30,7 @@ export const dishes = [
     {
       id: 5,
       name: "Butter Chicken",
-      category: "indian",
+      category: "chicken",
       
       image: "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db"
     },

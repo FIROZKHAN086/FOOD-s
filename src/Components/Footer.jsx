@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaMapMarkerAlt, FaPhone, FaEnvelope, FaUtensils } from 'react-icons/fa';
-
+import { Link } from 'react-router-dom';
 const Footer = () => {
   return (
     <footer className="relative bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 overflow-hidden">
@@ -34,28 +34,28 @@ const Footer = () => {
             </h4>
             <ul className="space-y-4 text-gray-300">
               <li>
-                <a href="#" className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2">
+                <Link to="/" className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2">
                   <span>→</span>
                   <span>Our Menu</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2">
+                <Link to="/" className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2">
                   <span>→</span>
                   <span>About Us</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2">
+                <Link to="/" className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2">
                   <span>→</span>
                   <span>Contact</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2">
+                <Link to="/" className="hover:text-pink-400 transition-colors duration-300 flex items-center space-x-2">
                   <span>→</span>
                   <span>Careers</span>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -111,18 +111,18 @@ const Footer = () => {
               © 2024 FoodieHub. All rights reserved.
             </p>
             <div className="flex space-x-6">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-400 transition-colors duration-300">
+              <Link to="/" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-400 transition-colors duration-300">
                 <FaFacebookF className="text-white" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-400 transition-colors duration-300">
+              </Link>
+              <Link to="/" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-400 transition-colors duration-300">
                 <FaTwitter className="text-white" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-400 transition-colors duration-300">
+              </Link>
+              <Link href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-400 transition-colors duration-300">
                 <FaInstagram className="text-white" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-400 transition-colors duration-300">
+              </Link>
+              <Link href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-400 transition-colors duration-300">
                 <FaLinkedinIn className="text-white" />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
