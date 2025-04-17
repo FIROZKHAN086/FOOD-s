@@ -19,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-const AuthPage = ({ setAuth }) => {
+const Authpage = ({ setAuth }) => {
   const [isAuth, setIsAuth] = useState(true); // true = login, false = signup
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -185,4 +185,4 @@ const AuthPage = ({ setAuth }) => {
   );
 };
 
-export default AuthPage;
+export default Authpage;
