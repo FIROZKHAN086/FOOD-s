@@ -1,7 +1,41 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
-const url = "https://food-apps-653q.onrender.com";
+// Base URL configuration
+const getBaseUrl = () => {
+  if (process.env.NODE_ENV === 'development') {
+    return "http://localhost:5000"; // Development URL
+  }
+  return "https://food-apps-653q.onrender.com"; // Production URL
+};
+
+const url = getBaseUrl();
+
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: url,
+  timeout: 15000, // 15 seconds timeout
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  }
+});
+
+// Add response interceptor
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.code === 'ECONNABORTED') {
+      return Promise.reject(new Error('Request timeout. Please check your internet connection.'));
+    }
+    if (!error.response) {
+      return Promise.reject(new Error('Network error. Please check your internet connection.'));
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const FoodContext = createContext();
 
 const initialState = {
@@ -21,6 +55,7 @@ const foodReducer = (state, action) => {
         allItems: action.payload,
         filteredItems: action.payload,
         loading: false,
+        error: null,
       };
 
     case "SET_ERROR":
@@ -49,30 +84,29 @@ const foodReducer = (state, action) => {
               ),
       };
 
-      case "ADD_TO_CART":
-        const item = action.payload;
-      
-        if (!item || !item._id) {
-          console.error("Invalid item passed to cart:", item);
-          return state; // safely return without breaking
-        }
-      
-        const exist = state.cart.find(i => i._id === item._id);
-      
-        if (exist) {
-          return {
-            ...state,
-            cart: state.cart.map(i =>
-              i._id === item._id ? { ...i, quantity: i.quantity + 1 } : i
-            ),
-          };
-        } else {
-          return {
-            ...state,
-            cart: [...state.cart, { ...item, quantity: 1 }],
-          };
-        }
-      
+    case "ADD_TO_CART":
+      const item = action.payload;
+    
+      if (!item || !item._id) {
+        console.error("Invalid item passed to cart:", item);
+        return state;
+      }
+    
+      const exist = state.cart.find(i => i._id === item._id);
+    
+      if (exist) {
+        return {
+          ...state,
+          cart: state.cart.map(i =>
+            i._id === item._id ? { ...i, quantity: i.quantity + 1 } : i
+          ),
+        };
+      } else {
+        return {
+          ...state,
+          cart: [...state.cart, { ...item, quantity: 1 }],
+        };
+      }
 
     case "REMOVE_FROM_CART":
       return {
@@ -86,7 +120,7 @@ const foodReducer = (state, action) => {
         cart: [],
       };
 
-      case "UPDATE_QUANTITY": 
+    case "UPDATE_QUANTITY": 
       return {
         ...state,
         cart: state.cart.map(i =>
@@ -96,7 +130,6 @@ const foodReducer = (state, action) => {
         ),  
       };
     
-    
     default:
       return state;
   }
@@ -105,17 +138,78 @@ const foodReducer = (state, action) => {
 export const FoodProvider = ({ children }) => {
   const [state, dispatch] = useReducer(foodReducer, initialState);
 
-  // Fetch data from backend
+  // Fetch data from backend with retry logic
   useEffect(() => {
+    let isMounted = true;
+    let retryCount = 0;
+    const maxRetries = 3;
+    const retryDelay = 2000; // 2 seconds
+
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${url}/api/foods`);
-        dispatch({ type: "SET_ITEMS", payload: response.data });
+        const response = await api.get('/api/foods');
+        
+        if (isMounted) {
+          if (response.data && Array.isArray(response.data)) {
+            dispatch({ type: "SET_ITEMS", payload: response.data });
+          } else {
+            throw new Error('Invalid data format received from server');
+          }
+        }
       } catch (error) {
-        dispatch({ type: "SET_ERROR", payload: error.message });
+        console.error("Error fetching data:", error);
+        
+        if (isMounted) {
+          if (retryCount < maxRetries) {
+            retryCount++;
+            const retryMessage = `Connection issue. Retrying (${retryCount}/${maxRetries})...`;
+            toast.error(retryMessage);
+            setTimeout(fetchData, retryDelay);
+          } else {
+            const errorMessage = error.message || 'Failed to load food items. Please check your internet connection and try again.';
+            dispatch({ type: "SET_ERROR", payload: errorMessage });
+            toast.error(errorMessage);
+          }
+        }
       }
     };
-    fetchData();
+
+    // Check network connectivity before making request
+    if (navigator.onLine) {
+      fetchData();
+    } else {
+      dispatch({ 
+        type: "SET_ERROR", 
+        payload: "No internet connection. Please check your network and try again." 
+      });
+      toast.error("No internet connection. Please check your network and try again.");
+    }
+
+    // Add online/offline event listeners
+    const handleOnline = () => {
+      if (isMounted) {
+        fetchData();
+      }
+    };
+
+    const handleOffline = () => {
+      if (isMounted) {
+        dispatch({ 
+          type: "SET_ERROR", 
+          payload: "No internet connection. Please check your network and try again." 
+        });
+        toast.error("No internet connection. Please check your network and try again.");
+      }
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
   }, []);
 
   // Watch category change and filter
