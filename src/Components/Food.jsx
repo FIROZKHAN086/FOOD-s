@@ -122,7 +122,7 @@ const FoodMenu = () => {
                             <Swiper
                                 modules={[Navigation, Pagination, Autoplay]}
                                 pagination={{ clickable: true }}
-                                autoplay={{ delay: 3000 }}
+                                Navigation={true}
                                 spaceBetween={20}
                                 slidesPerView={1}
                                 className="food-swiper-mobile"
