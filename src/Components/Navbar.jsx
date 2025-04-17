@@ -62,12 +62,14 @@ const Navbar = ({ setAuth , IsAdmin }) => {
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 backdrop-blur-lg rounded-lg shadow-xl py-2 border border-white/20">
+              <div className="absolute right-0 mt-2 w-48 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 backdrop-blur-lg rounded-lg shadow-xl py-2 border border-white/20"
+              onClick={()=>setIsDropdownOpen(false)} >
                 {auth.currentUser ? (
                   <>
                     <Link
                       to="/myorders"
                       className="flex items-center gap-2 px-4 py-2 text-gray-800 hover:bg-white/20 transition-all duration-300"
+                      onClick={()=>setIsDropdownOpen(false)}
                     >
                       <FaClipboardList className="text-purple-600" />
                       My Orders

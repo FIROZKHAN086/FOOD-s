@@ -71,7 +71,7 @@ const MyOrders = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#1f1c2c] to-[#928dab] py-10 px-4 text-white flex items-center justify-center">
+      <div className="min-h-screen mt-20 bg-gradient-to-br from-[#1f1c2c] to-[#928dab] py-10 px-4 text-white flex items-center justify-center">
         <FaSpinner className="animate-spin text-4xl" />
       </div>
     );
@@ -79,7 +79,7 @@ const MyOrders = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#1f1c2c] to-[#928dab] py-10 px-4 text-white flex items-center justify-center">
+      <div className="min-h-screen mt-20 bg-gradient-to-br from-[#1f1c2c] to-[#928dab] py-10 px-4 text-white flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4 text-red-500">Error</h2>
           <p className="text-white/70">{error}</p>
@@ -89,7 +89,7 @@ const MyOrders = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1f1c2c] to-[#928dab] py-10 px-4">
+    <div className="min-h-screen mt-20 bg-gradient-to-br from-[#1f1c2c] to-[#928dab] py-10 px-4">
       <div className="max-w-4xl mx-auto">
         <h2 className="text-3xl font-bold text-white mb-8 text-center">My Orders</h2>
 
