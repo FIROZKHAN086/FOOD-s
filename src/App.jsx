@@ -18,7 +18,7 @@ const App = () => {
 
   useEffect(()=>{
     const isAdmin = localStorage.getItem("userId")
-    console.log(isAdmin)
+   
      if(isAdmin === "AyAZf2Qo3TXh7TP1H92JPD8Hydw2"){
       setIsAdmin(true)
     }

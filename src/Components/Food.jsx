@@ -31,7 +31,8 @@ const FoodMenu = () => {
     if (loading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-8 flex items-center justify-center">
-                <div className="text-white text-2xl">Loading...</div>
+                <div className="animate-spin w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full"></div>
+                <div className="ml-4 text-white text-2xl font-medium animate-pulse">Loading<span className="animate-bounce">.</span><span className="animate-bounce delay-100">.</span><span className="animate-bounce delay-200">.</span></div>
             </div>
         );
     }
@@ -152,7 +153,7 @@ const FoodMenu = () => {
                                                     </div>
                                                     <p className="text-gray-300 text-sm mb-4">{item.description}</p>
                                                     <button 
-                                                        onClick={() => addToCart(item.id)}
+                                                         onClick={() => addToCart(item)}
                                                         className={`w-full py-3 rounded-xl font-medium transition-all duration-300
                                                                 ${item.isAvailable 
                                                                     ? cart[item.id] > 0

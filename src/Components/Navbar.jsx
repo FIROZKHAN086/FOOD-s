@@ -4,6 +4,7 @@ import { useFoodContext } from "../Context/Context";
 import { useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
 
+
 const Navbar = ({ setAuth , IsAdmin }) => {
   const { cart } = useFoodContext();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -25,7 +26,7 @@ const Navbar = ({ setAuth , IsAdmin }) => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-br from-green-600 via-yellow-200 to-white shadow-md px-6 py-4">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="text-2xl font-bold text-gray-800">FoodieHub</div>
+       <Link to="/" className="text-2xl font-bold text-gray-800">FoodieHub</Link>
 
         {/* Center Nav Links */}
         <ul className="hidden md:flex gap-8 text-gray-600 font-medium">

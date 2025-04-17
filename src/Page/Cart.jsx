@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaShoppingCart, FaTrash, FaCreditCard } from 'react-icons/fa';
 import { useFoodContext } from '../Context/Context';
 import { Link } from 'react-router-dom';
 const Cart = () => {
-  const { cart, removeFromCart, updateQuantity } = useFoodContext();
+  const { cart, removeFromCart, updateQuantity, setCart } = useFoodContext();
 
-  // const getCart = localStorage.getItem("cart");
-  // const Cart = JSON.parse(getCart);
+      useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-20 px-4">

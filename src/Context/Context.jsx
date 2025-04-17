@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useReducer } from "react";
 import axios from "axios";
 
-const url = "http://localhost:3000";
+const url = "https://food-apps-653q.onrender.com";
 export const FoodContext = createContext();
 
 const initialState = {
@@ -72,7 +72,6 @@ const foodReducer = (state, action) => {
             cart: [...state.cart, { ...item, quantity: 1 }],
           };
         }
-       
       
 
     case "REMOVE_FROM_CART":
@@ -131,7 +130,6 @@ export const FoodProvider = ({ children }) => {
 
   const addToCart = item => {
     dispatch({ type: "ADD_TO_CART", payload: item });
-    console.log(state.cart);
   };
 
   const removeFromCart = id => {
