@@ -95,10 +95,12 @@ const Cart = () => {
                   </div>
                 </div>
 
-                <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-pink-500/25 flex items-center justify-center gap-2">
+                <Link to="/checkout">
+                  <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-pink-500/25 flex items-center justify-center gap-2">
                   <FaCreditCard />
                   Proceed to Checkout
                 </button>
+                </Link>
               </div>
             </div>
           </div>

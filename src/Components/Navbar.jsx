@@ -4,7 +4,7 @@ import { useFoodContext } from "../Context/Context";
 import { useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
 
-const Navbar = ({ setAuth }) => {
+const Navbar = ({ setAuth , IsAdmin }) => {
   const { cart } = useFoodContext();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const auth = getAuth();
@@ -12,6 +12,9 @@ const Navbar = ({ setAuth }) => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userName');
+      localStorage.removeItem('userEmail');
       setIsDropdownOpen(false);
     } catch (error) {
       console.error("Error signing out:", error);
@@ -43,6 +46,9 @@ const Navbar = ({ setAuth }) => {
             <FaShoppingCart />
             <span className="text-gray-800 font-medium">{cart.length}</span>
           </Link>
+              {IsAdmin && (
+              <Link to="/admin"><button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:shadow-lg">Admin</button></Link>
+            )}
           
           {/* User Dropdown */}
           <div className="relative">
@@ -52,11 +58,6 @@ const Navbar = ({ setAuth }) => {
               className={`${auth.currentUser ? 'hover:text-purple-500 cursor-pointer transition-all duration-300 flex items-center gap-2 bg-[#0d143d] text-white px-4 py-2 rounded-lg hover:shadow-lg' : 'hover:text-green-600 cursor-pointer transition-all duration-300 flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg hover:shadow-lg '} `}
             >
               <FaUser className="text-xl" />
-              {/* {auth.currentUser && (
-                <span className="text-sm font-medium">
-                  {auth.currentUser.displayName || auth.currentUser.email}
-                </span>
-              )} */}
             </button>
 
             {isDropdownOpen && (
@@ -64,7 +65,7 @@ const Navbar = ({ setAuth }) => {
                 {auth.currentUser ? (
                   <>
                     <Link
-                      to="/my-orders"
+                      to="/myorders"
                       className="flex items-center gap-2 px-4 py-2 text-gray-800 hover:bg-white/20 transition-all duration-300"
                     >
                       <FaClipboardList className="text-purple-600" />

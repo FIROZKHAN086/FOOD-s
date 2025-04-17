@@ -9,7 +9,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyANKpOEjn57Xjttxx4Veh82zUgk_GfuiR8",
   authDomain: "food-fc6a4.firebaseapp.com",
   projectId: "food-fc6a4",
-  storageBucket: "food-fc6a4.appspot.com", // Fixed storageBucket value
+  storageBucket: "food-fc6a4.appspot.com",
   messagingSenderId: "916931891471",
   appId: "1:916931891471:web:7dd311147fff2abab2ae7a",
   measurementId: "G-JBSVN0QWDH"
@@ -29,6 +29,11 @@ const AuthPage = ({ setAuth }) => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      
+      // Save user data to localStorage
+      localStorage.setItem('userId', user.uid);
+      localStorage.setItem('userName', user.displayName || name.trim());
+      localStorage.setItem('userEmail', user.email);
       
       // Update user profile with display name if signing up
       if (!isAuth && name.trim()) {
@@ -57,7 +62,14 @@ const AuthPage = ({ setAuth }) => {
     if (isAuth) {
       // Login with email/password
       try {
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        // Save user data to localStorage
+        localStorage.setItem('userId', user.uid);
+        localStorage.setItem('userName', user.displayName || name.trim());
+        localStorage.setItem('userEmail', user.email);
+        
         toast.success("Logged in successfully!");
         setAuth(false);
         setName("");
@@ -71,6 +83,11 @@ const AuthPage = ({ setAuth }) => {
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
+        
+        // Save user data to localStorage
+        localStorage.setItem('userId', user.uid);
+        localStorage.setItem('userName', name.trim());
+        localStorage.setItem('userEmail', user.email);
         
         // Update user profile with display name
         await updateProfile(user, {
@@ -90,19 +107,19 @@ const AuthPage = ({ setAuth }) => {
 
   return (
     <div className="fixed top-0 py-10 z-50 left-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1f1c2c] to-[#928dab] p-6">
-       <Toaster
-  position="top-left"
-  reverseOrder={true}
-/>
+      <Toaster
+        position="top-left"
+        reverseOrder={true}
+      />
       <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-8 text-white">
-      <div className="flex items-center gap-2 justify-between">
-        <h2 className="text-3xl font-bold mb-6 text-center tracking-wide">
-          {isAuth ? "Log In to Your Account" : "Create a New Account"}
-        </h2>
-        <button onClick={() => setAuth(false)} className="text-white/80  mx-auto hover:text-white transition">
-          <FaTimes className="text-2xl" />
-        </button>
-      </div>
+        <div className="flex items-center gap-2 justify-between">
+          <h2 className="text-3xl font-bold mb-6 text-center tracking-wide">
+            {isAuth ? "Log In to Your Account" : "Create a New Account"}
+          </h2>
+          <button onClick={() => setAuth(false)} className="text-white/80 mx-auto hover:text-white transition">
+            <FaTimes className="text-2xl" />
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isAuth && (
