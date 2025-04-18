@@ -1,13 +1,15 @@
-import { FaShoppingCart, FaUser, FaSignOutAlt, FaClipboardList, FaCog, FaHome, FaStore, FaPhoneAlt } from "react-icons/fa";
+import { FaShoppingCart, FaUser, FaSignOutAlt, FaClipboardList, FaCog, FaHome, FaStore, FaPhoneAlt, FaBell } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useFoodContext } from "../Context/Context";
 import { useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
 
+
 const Navbar = ({ setAuth, IsAdmin }) => {
   const { cart } = useFoodContext();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const auth = getAuth();
+
 
   const handleLogout = async () => {
     try {
@@ -40,12 +42,18 @@ const Navbar = ({ setAuth, IsAdmin }) => {
         </ul>
 
         {/* Icons */}
-        <div className="flex items-center gap-6 text-white text-xl">
-          <Link to="/cart" className="hover:text-pink-400 flex items-center gap-2 cursor-pointer transition-all duration-300">
+        <div className="flex items-center gap-4 text-white text-xl">
+          <div className="relative flex items-center gap-2">
+          <Link to="/cart" className="hover:text-pink-400 sm:ml-2 flex items-center gap-1 cursor-pointer transition-all duration-300">
             <FaShoppingCart />
             <span className="text-lg font-medium">{cart.length}</span>
           </Link>
-
+          
+          <Link to="/notification" className="hover:text-pink-400 flex items-center gap-1 cursor-pointer transition-all duration-300">
+            <FaBell/>
+            
+          </Link>
+          </div>
           {IsAdmin && (
             <Link to="/admin">
               <button className="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 transition-all duration-300 shadow-lg transform hover:scale-105">
@@ -58,7 +66,7 @@ const Navbar = ({ setAuth, IsAdmin }) => {
           <div className="relative">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className={`${auth.currentUser ? 'hover:text-purple-500 cursor-pointer transition-all duration-300 flex items-center gap-2 bg-[#0d143d] text-white px-4 py-2 rounded-lg hover:shadow-lg' : 'hover:text-pink-400 cursor-pointer transition-all duration-300 flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg hover:shadow-lg'} `}
+              className={`${auth.currentUser ? 'hover:text-purple-500 cursor-pointer transition-all duration-300 flex items-center gap-2 bg-[#0f184b] text-white px-4 py-2 rounded-lg hover:shadow-lg' : 'hover:text-pink-400 cursor-pointer transition-all duration-300 flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg hover:shadow-lg'} `}
             >
               <FaUser className="text-xl" />
             </button>

@@ -5,15 +5,17 @@ import FoodMenu from '../Components/Food'
 import App from '../Components/App'
 import { useEffect } from 'react';
 export const Home = () => {
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   return (
     <div>
-        <Hero />
+     <Hero />
         <Filter />
         <FoodMenu />
         <App/>
+       
     </div>
   )
 }

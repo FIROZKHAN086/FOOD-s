@@ -11,10 +11,12 @@ import MyOrders from './Page/MyOrdes'
 import AdminDashboard from './Page/AdminPan/AdminDashboard'
 import ManageFoods from './Page/AdminPan/ManageFoods'
 import ManageOrders from './Page/AdminPan/ManageOrders'
-
+import NotificationPage from './Page/Notification'
+import ReviewPage from './Page/Reviwe'
 const App = () => {
   const [Auth, setAuth] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false);
+  
 
   useEffect(()=>{
     const isAdmin = localStorage.getItem("userId")
@@ -29,6 +31,7 @@ const App = () => {
 
       <Navbar setAuth={setAuth} IsAdmin={isAdmin} />
       {Auth ? <Authpage setAuth={setAuth} /> : <></>}
+      
       <Toaster
   position="top-left"
   reverseOrder={true}
@@ -38,6 +41,8 @@ const App = () => {
         <Route path='/cart' element={<Cart />} />
         <Route path='/checkout' element={<Chekout />} />
         <Route path='/myorders' element={<MyOrders />} />
+        <Route path='/notification' element={<NotificationPage />} />
+        <Route path='/review' element={<ReviewPage />} />
         {isAdmin && (
           <>
             <Route path='/admin' element={<AdminDashboard />} />
