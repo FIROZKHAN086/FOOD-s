@@ -12,7 +12,7 @@ const ReviewPage = () => {
   const [review, setReview] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [reviews, setReviews] = useState([]);
+  const [comereviews, setcomeReviews] = useState([]);
   const auth = getAuth();
   const { url } = useFoodContext();
 
@@ -24,7 +24,7 @@ const ReviewPage = () => {
   const fetchReviews = async () => {
     try {
       const response = await axios.get(`${url}/api/reviews`);
-      setReviews(response.data);
+      setcomeReviews(response.data.data);
     } catch (error) {
       console.error("Failed to fetch reviews:", error);
       toast.error("Failed to load reviews");
@@ -168,7 +168,7 @@ const ReviewPage = () => {
             <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">What Our Customers Say</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {reviews.map((review, index) => (
+              {comereviews.map((review, index) => (
                 <motion.div
                   key={review._id || index}
                   initial={{ opacity: 0, y: 20 }}
