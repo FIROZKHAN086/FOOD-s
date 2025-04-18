@@ -1,11 +1,10 @@
-import { FaShoppingCart, FaUser, FaSignOutAlt, FaClipboardList, FaCog } from "react-icons/fa";
+import { FaShoppingCart, FaUser, FaSignOutAlt, FaClipboardList, FaCog, FaHome, FaStore, FaPhoneAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useFoodContext } from "../Context/Context";
 import { useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
 
-
-const Navbar = ({ setAuth , IsAdmin }) => {
+const Navbar = ({ setAuth, IsAdmin }) => {
   const { cart } = useFoodContext();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const auth = getAuth();
@@ -23,67 +22,71 @@ const Navbar = ({ setAuth , IsAdmin }) => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-br from-green-600 via-yellow-200 to-white shadow-md px-6 py-4">
+    <nav className="fixed top-0 left-0 right-0 z-10 bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600 shadow-lg px-6 py-4">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
-       <Link to="/" className="text-2xl font-bold text-gray-800">FoodieHub</Link>
+        <Link to="/" className="text-3xl font-bold text-white tracking-wider hover:text-pink-300 transition-all duration-300">
+          FoodieHub
+        </Link>
 
         {/* Center Nav Links */}
-        <ul className="hidden md:flex gap-8 text-gray-600 font-medium">
+        <ul className="hidden md:flex gap-8 text-white font-medium">
           {["Home", "Shop", "About", "Contact"].map((item, idx) => (
-            <li
-              key={idx}
-              className="group relative cursor-pointer transition text-gray-600 hover:text-green-600"
-            >
+           <Link to={'/'}> <li key={idx} className="group relative cursor-pointer text-white hover:text-pink-400 transition text-lg">
               {item}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
-            </li>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-pink-400 transition-all duration-300 group-hover:w-full"></span>
+            </li></Link>
           ))}
         </ul>
 
         {/* Icons */}
-        <div className="flex items-center gap-6 text-gray-600 text-xl">
-          <Link to="/cart" className="hover:text-green-600 flex items-center gap-2 cursor-pointer transition">
+        <div className="flex items-center gap-6 text-white text-xl">
+          <Link to="/cart" className="hover:text-pink-400 flex items-center gap-2 cursor-pointer transition-all duration-300">
             <FaShoppingCart />
-            <span className="text-gray-800 font-medium">{cart.length}</span>
+            <span className="text-lg font-medium">{cart.length}</span>
           </Link>
-              {IsAdmin && (
-              <Link to="/admin"><button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:shadow-lg">Admin</button></Link>
-            )}
-          
+
+          {IsAdmin && (
+            <Link to="/admin">
+              <button className="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 transition-all duration-300 shadow-lg transform hover:scale-105">
+                Admin
+              </button>
+            </Link>
+          )}
+
           {/* User Dropdown */}
           <div className="relative">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              
-              className={`${auth.currentUser ? 'hover:text-purple-500 cursor-pointer transition-all duration-300 flex items-center gap-2 bg-[#0d143d] text-white px-4 py-2 rounded-lg hover:shadow-lg' : 'hover:text-green-600 cursor-pointer transition-all duration-300 flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg hover:shadow-lg '} `}
+              className={`${auth.currentUser ? 'hover:text-purple-500 cursor-pointer transition-all duration-300 flex items-center gap-2 bg-[#0d143d] text-white px-4 py-2 rounded-lg hover:shadow-lg' : 'hover:text-pink-400 cursor-pointer transition-all duration-300 flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg hover:shadow-lg'} `}
             >
               <FaUser className="text-xl" />
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 backdrop-blur-lg rounded-lg shadow-xl py-2 border border-white/20"
-              onClick={()=>setIsDropdownOpen(false)} >
+              <div className="absolute right-0 mt-2 w-48 bg-gradient-to-r from-teal-400 to-blue-500 backdrop-blur-lg rounded-lg shadow-xl py-2 border border-white/20"
+                onClick={() => setIsDropdownOpen(false)}
+              >
                 {auth.currentUser ? (
                   <>
                     <Link
                       to="/myorders"
-                      className="flex items-center gap-2 px-4 py-2 text-gray-800 hover:bg-white/20 transition-all duration-300"
-                      onClick={()=>setIsDropdownOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/20 transition-all duration-300"
+                      onClick={() => setIsDropdownOpen(false)}
                     >
-                      <FaClipboardList className="text-purple-600" />
+                      <FaClipboardList className="text-teal-400" />
                       My Orders
                     </Link>
                     <Link
                       to="/account"
-                      className="flex items-center gap-2 px-4 py-2 text-gray-800 hover:bg-white/20 transition-all duration-300"
+                      className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/20 transition-all duration-300"
                     >
-                      <FaCog className="text-indigo-600" />
+                      <FaCog className="text-blue-300" />
                       Manage Account
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-2 w-full px-4 py-2 text-gray-800 hover:bg-white/20 transition-all duration-300"
+                      className="flex items-center gap-2 w-full px-4 py-2 text-white hover:bg-white/20 transition-all duration-300"
                     >
                       <FaSignOutAlt className="text-pink-600" />
                       Logout
@@ -92,7 +95,7 @@ const Navbar = ({ setAuth , IsAdmin }) => {
                 ) : (
                   <button
                     onClick={() => setAuth(true)}
-                    className="flex items-center gap-2 w-full px-4 py-2 text-gray-800 hover:bg-white/20 transition-all duration-300"
+                    className="flex items-center gap-2 w-full px-4 py-2 text-white hover:bg-white/20 transition-all duration-300"
                   >
                     <FaUser className="text-purple-600" />
                     Login

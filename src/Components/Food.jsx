@@ -46,7 +46,7 @@ const FoodMenu = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-8">
+        <div className="min-h-screen  relative bg-gradient-to-br from-slate-900 to-slate-800 py-8">
             <div className="max-w-[2000px] mx-auto px-4">
                 <h1 className="text-6xl font-bold text-center mb-10 text-white">
                     Our Food Menu
@@ -118,7 +118,7 @@ const FoodMenu = () => {
                 <div className="md:hidden">
                     {categories.map((category) => (
                         <div key={category} className="mb-12">
-                            <h2 className="text-3xl font-bold text-white mb-6 capitalize">{category}</h2>
+                            <h2 className="text-3xl font-bold md:z-10 z-40 text-white mb-6 capitalize">{category}</h2>
                             <Swiper
                                 modules={[Navigation, Pagination, Autoplay]}
                                 pagination={{ clickable: true }}
@@ -132,6 +132,7 @@ const FoodMenu = () => {
                                     .map((item) => (
                                         <SwiperSlide key={item.id}>
                                             <div className="group relative bg-white/5 backdrop-blur-sm rounded-3xl overflow-hidden 
+                                            
                                                         hover:bg-white/10 transition-all duration-500 transform hover:-translate-y-2
                                                         hover:shadow-2xl hover:shadow-purple-500/20">
                                                 <div className="aspect-w-16 aspect-h-9">

@@ -3,8 +3,9 @@ import { FaGoogle, FaTimes } from "react-icons/fa";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { Toaster, toast } from "react-hot-toast";
+import { motion } from "framer-motion";
 
-// Firebase config (replace this with your real config)
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyANKpOEjn57Xjttxx4Veh82zUgk_GfuiR8",
   authDomain: "food-fc6a4.firebaseapp.com",
@@ -20,7 +21,7 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 const Authpage = ({ setAuth }) => {
-  const [isAuth, setIsAuth] = useState(true); // true = login, false = signup
+  const [isAuth, setIsAuth] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,24 +30,14 @@ const Authpage = ({ setAuth }) => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      
-      // Save user data to localStorage
-      localStorage.setItem('userId', user.uid);
-      localStorage.setItem('userName', user.displayName || name.trim());
-      localStorage.setItem('userEmail', user.email);
-      
-      // Update user profile with display name if signing up
+      localStorage.setItem("userId", user.uid);
+      localStorage.setItem("userName", user.displayName || name.trim());
+      localStorage.setItem("userEmail", user.email);
       if (!isAuth && name.trim()) {
-        await updateProfile(user, {
-          displayName: name.trim()
-        });
+        await updateProfile(user, { displayName: name.trim() });
       }
-      
       toast.success("Google login success!");
       setAuth(false);
-      setName("");
-      setEmail("");
-      setPassword("");
     } catch (error) {
       toast.error(error.message);
     }
@@ -54,88 +45,61 @@ const Authpage = ({ setAuth }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isAuth && !name.trim()) {
-      toast.error("Name is required for signup.");
-      return;
-    }
+    if (!isAuth && !name.trim()) return toast.error("Name is required for signup.");
 
-    if (isAuth) {
-      // Login with email/password
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        
-        // Save user data to localStorage
-        localStorage.setItem('userId', user.uid);
-        localStorage.setItem('userName', user.displayName || name.trim());
-        localStorage.setItem('userEmail', user.email);
-        
-        toast.success("Logged in successfully!");
-        setAuth(false);
-        setName("");
-        setEmail("");
-        setPassword("");
-      } catch (error) {
-        toast.error(error.message);
-      }
-    } else {
-      // Sign up with email/password
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        
-        // Save user data to localStorage
-        localStorage.setItem('userId', user.uid);
-        localStorage.setItem('userName', name.trim());
-        localStorage.setItem('userEmail', user.email);
-        
-        // Update user profile with display name
-        await updateProfile(user, {
-          displayName: name.trim()
-        });
-        
-        toast.success("Account created successfully!");
-        setAuth(false);
-        setName("");
-        setEmail("");
-        setPassword("");
-      } catch (error) {
-        toast.error(error.message);
-      }
+    try {
+      const userCredential = isAuth
+        ? await signInWithEmailAndPassword(auth, email, password)
+        : await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      localStorage.setItem("userId", user.uid);
+      localStorage.setItem("userName", name.trim());
+      localStorage.setItem("userEmail", user.email);
+
+      if (!isAuth) await updateProfile(user, { displayName: name.trim() });
+      toast.success(isAuth ? "Logged in successfully!" : "Account created!");
+      setAuth(false);
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
   return (
-    <div className="fixed top-0 py-10 z-50 left-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1f1c2c] to-[#928dab] p-6">
-      <Toaster
-        position="top-left"
-        reverseOrder={true}
-      />
-      <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-8 text-white">
-        <div className="flex items-center gap-2 justify-between">
-          <h2 className="text-3xl font-bold mb-6 text-center tracking-wide">
-            {isAuth ? "Log In to Your Account" : "Create a New Account"}
-          </h2>
-          <button onClick={() => setAuth(false)} className="text-white/80 mx-auto hover:text-white transition">
-            <FaTimes className="text-2xl" />
-          </button>
-        </div>
+    <div className="fixed inset-0 bg-white bg-opacity-60 backdrop-blur-lg z-50 flex items-center justify-center p-6">
+      <Toaster position="top-left" reverseOrder={false} />
+
+      <motion.div
+        initial={{ opacity: 0, y: 50, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="w-full max-w-md bg-white shadow-xl rounded-3xl p-8 relative"
+      >
+        <button
+          onClick={() => setAuth(false)}
+          className="absolute top-5 right-5 text-gray-400 hover:text-red-400 transition"
+        >
+          <FaTimes size={20} />
+        </button>
+
+        <h2 className="text-3xl font-extrabold text-gray-800 mb-6 text-center">
+          {isAuth ? "Welcome Back 👋" : "Create Your Account"}
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isAuth && (
             <input
               type="text"
               placeholder="Full Name"
-              className="w-full px-4 py-3 rounded-xl bg-white/20 placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-pink-400"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400"
               required
             />
           )}
           <input
             type="email"
             placeholder="Email"
-            className="w-full px-4 py-3 rounded-xl bg-white/20 placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            className="w-full px-4 py-3 rounded-xl bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -143,44 +107,48 @@ const Authpage = ({ setAuth }) => {
           <input
             type="password"
             placeholder="Password"
-            className="w-full px-4 py-3 rounded-xl bg-white/20 placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            className="w-full px-4 py-3 rounded-xl bg-gray-100 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-400"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             type="submit"
-            className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 transition-all py-3 rounded-xl text-white font-bold shadow-lg hover:shadow-pink-400/30"
+            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 py-3 rounded-xl text-white font-semibold shadow-md"
           >
             {isAuth ? "Log In" : "Sign Up"}
-          </button>
+          </motion.button>
         </form>
 
         <div className="flex items-center my-6">
-          <hr className="flex-grow border-t border-white/20" />
-          <span className="px-3 text-sm text-white/70">OR</span>
-          <hr className="flex-grow border-t border-white/20" />
+          <hr className="flex-grow border-t border-gray-300" />
+          <span className="px-3 text-gray-500 text-sm">OR</span>
+          <hr className="flex-grow border-t border-gray-300" />
         </div>
 
-        <button
+        <motion.button
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
           onClick={handleGoogleSignup}
-          className="w-full flex items-center justify-center gap-3 bg-white text-gray-900 font-semibold py-3 rounded-xl hover:bg-gray-100 transition"
+          className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-800 font-semibold py-3 rounded-xl hover:bg-gray-100 transition"
         >
-          <FaGoogle className="text-lg" />
+          <FaGoogle />
           Continue with Google
-        </button>
+        </motion.button>
 
-        <p className="mt-6 text-center text-sm text-white/80">
-          {isAuth ? "Don't have an account?" : "Already have an account?"}
+        <p className="mt-6 text-center text-gray-600 text-sm">
+          {isAuth ? "Don't have an account?" : "Already have an account?"}{" "}
           <button
             onClick={() => setIsAuth(!isAuth)}
-            className="ml-2 text-pink-300 hover:underline"
+            className="text-purple-500 hover:underline font-medium ml-1"
           >
             {isAuth ? "Sign up" : "Log in"}
           </button>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 };

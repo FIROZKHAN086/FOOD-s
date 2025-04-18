@@ -49,7 +49,7 @@ const AppDownload = () => {
               <div className="absolute inset-0 bg-black rounded-[3rem] shadow-2xl"></div>
               <div className="absolute inset-2 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-[2.8rem] overflow-hidden">
                 <img 
-                  src="https://placehold.co/280x580/667EEA/ffffff?text=App+Screenshot"
+                  src="./SC.jpg"
                   alt="FoodieHub App Screenshot"
                   className="w-full h-full object-cover"
                 />
