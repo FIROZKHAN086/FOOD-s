@@ -42,7 +42,7 @@ const ManageOrders = () => {
       toast.error("Invalid order or status");
       return;
     }
-
+  
     setUpdatingStatus(true);
     try {
       const response = await axios.put(`${url}/api/orders/${orderId}/payment-status`, {
@@ -50,10 +50,10 @@ const ManageOrders = () => {
         transactionId: `txn-${Date.now()}`,
         notes: `Payment status updated to ${newStatus}`
       });
-
+  
       if (response.data.success) {
         toast.success("Payment status updated successfully");
-        fetchOrders();
+        fetchOrders();  // Fetch updated orders list
         setShowPaymentModal(false);
       } else {
         toast.error(response.data.message || "Failed to update payment status");
@@ -72,16 +72,16 @@ const ManageOrders = () => {
       toast.error("Invalid order or status");
       return;
     }
-
+  
     setUpdatingStatus(true);
     try {
       const response = await axios.put(`${url}/api/orders/${orderId}/status`, {
         status: newStatus
       });
-
+  
       if (response.data.success) {
         toast.success("Order status updated successfully");
-        fetchOrders();
+        fetchOrders();  // Fetch updated orders list
         setShowOrderModal(false);
       } else {
         toast.error(response.data.message || "Failed to update order status");
@@ -94,6 +94,7 @@ const ManageOrders = () => {
       setUpdatingStatus(false);
     }
   };
+  
 
   const getStatusColor = (status) => {
     if (!status || typeof status !== "string") return "bg-gray-400 text-gray-900";

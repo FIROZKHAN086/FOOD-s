@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 
 // ✅ Directly set production URL for deployment
-const url = "https://food-apps-653q.onrender.com";
+const url = "https://food-apps-653q.onrender.com" || "http://localhost:3000";
 
 // Create axios instance
 const api = axios.create({

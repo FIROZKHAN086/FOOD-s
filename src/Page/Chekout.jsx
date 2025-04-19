@@ -108,9 +108,9 @@ const CheckoutPage = () => {
     try {
       const response = await axios.post(`${url}/api/orders`, orderData);
       if (response.data) {
-        toast.success("Order placed successfully!");
+      toast.success("Order placed successfully!");
         navigate("/myorders");
-        clearCart();
+      clearCart();
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to place order.");
@@ -142,8 +142,8 @@ const CheckoutPage = () => {
               animate="visible"
               transition={{ delay: 0.2 }}
               className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-6 rounded-xl border"
-            >
-              <div>
+                >
+                  <div>
                 <p className="text-sm text-gray-500">Name</p>
                 <p className="text-lg font-semibold">{user?.displayName || "Guest"}</p>
               </div>
@@ -221,9 +221,9 @@ const CheckoutPage = () => {
                       </div>
                     </div>
                     <div className="text-xl font-bold text-purple-600">${(item.price * item.quantity).toFixed(2)}</div>
-                  </div>
-                ))}
-              </div>
+                </div>
+              ))}
+            </div>
             </motion.div>
 
             {/* Payment Method */}
@@ -236,15 +236,15 @@ const CheckoutPage = () => {
             >
               <div className="p-6 bg-gray-50 border border-gray-200 rounded-xl">
                 <label className="block text-lg font-medium mb-4">Payment Method</label>
-                <select
-                  value={paymentMethod}
-                  onChange={(e) => setPaymentMethod(e.target.value)}
+          <select
+            value={paymentMethod}
+            onChange={(e) => setPaymentMethod(e.target.value)}
                   className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 mb-4"
                 >
                   <option value="cash">Cash on Delivery</option>
                   <option value="card">Credit/Debit Card</option>
                   <option value="upi">UPI Payment</option>
-                </select>
+          </select>
 
                 {paymentMethod === "card" && (
                   <div className="space-y-4">
@@ -299,7 +299,7 @@ const CheckoutPage = () => {
                     />
                   </div>
                 )}
-              </div>
+        </div>
 
               <div className="flex justify-between items-center bg-gray-50 border border-gray-200 p-6 rounded-xl">
                 <span className="text-xl font-semibold">Total</span>
@@ -314,8 +314,8 @@ const CheckoutPage = () => {
               animate="visible"
               transition={{ delay: 0.8 }}
             >
-              <button
-                onClick={handleOrderSubmit}
+        <button
+          onClick={handleOrderSubmit}
                 disabled={isSubmitting}
                 className={`w-full text-center py-4 px-6 rounded-xl font-bold text-lg tracking-wide 
                   bg-gradient-to-r from-blue-500 to-purple-500 text-white 
@@ -333,7 +333,7 @@ const CheckoutPage = () => {
                 ) : (
                   "Place Order"
                 )}
-              </button>
+        </button>
             </motion.div>
           </div>
         </motion.div>
