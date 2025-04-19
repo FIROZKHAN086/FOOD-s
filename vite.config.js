@@ -30,12 +30,12 @@ export default defineConfig({
           },
           {
             src: './icons/apple-icon-144x144.png',
-            sizes: '512x512',
+            sizes: '144x144',
             type: 'image/png'
           },
           {
             src: './icons/apple-icon-144x144.png',
-            sizes: '512x512',
+            sizes: '144x144',
             type: 'image/png',
             purpose: 'any maskable'
           }
