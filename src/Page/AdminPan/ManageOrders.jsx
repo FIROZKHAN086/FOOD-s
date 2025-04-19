@@ -26,7 +26,8 @@ const ManageOrders = () => {
         endpoint += `?status=${selectedStatus}&paymentStatus=${selectedPaymentStatus}`;
       }
       const response = await axios.get(endpoint);
-      setOrders(response.data.data);
+      console.log(response.data);
+      setOrders(response.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -39,6 +40,7 @@ const ManageOrders = () => {
     try {
       await axios.put(`${url}/api/orders/${orderId}/payment-status`, {
         status: newStatus,
+        transactionId: `txn-${Date.now()}`, // Add this dummy or actual value
         notes: `Payment status updated to ${newStatus}`
       });
       toast.success("Payment status updated successfully");
@@ -49,6 +51,7 @@ const ManageOrders = () => {
       toast.error("Failed to update payment status");
     }
   };
+  
 
   const handleOrderStatusUpdate = async (orderId, newStatus) => {
     try {
@@ -65,6 +68,7 @@ const ManageOrders = () => {
   };
 
   const getStatusColor = (status) => {
+    if (!status || typeof status !== "string") return "bg-gray-400 text-gray-900";
     switch (status.toLowerCase()) {
       case "pending":
         return "bg-yellow-400 text-yellow-900";
@@ -80,6 +84,7 @@ const ManageOrders = () => {
   };
 
   const getPaymentStatusColor = (status) => {
+    if (!status || typeof status !== "string") return "bg-gray-400 text-gray-900";
     switch (status.toLowerCase()) {
       case "pending":
         return "bg-yellow-400 text-yellow-900";
@@ -97,6 +102,7 @@ const ManageOrders = () => {
   };
 
   const getPaymentMethodIcon = (method) => {
+    if (!method || typeof method !== "string") return null;
     switch (method.toLowerCase()) {
       case "cash":
         return <FaMoneyBillWave className="text-green-500" />;
