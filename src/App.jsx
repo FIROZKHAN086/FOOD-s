@@ -13,6 +13,7 @@ import ManageFoods from './Page/AdminPan/ManageFoods'
 import ManageOrders from './Page/AdminPan/ManageOrders'
 import NotificationPage from './Page/Notification'
 import ReviewPage from './Page/Reviwe'
+import Account from './Page/Account'
 const App = () => {
   const [Auth, setAuth] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false);
@@ -43,6 +44,7 @@ const App = () => {
         <Route path='/myorders' element={<MyOrders />} />
         <Route path='/notification' element={<NotificationPage />} />
         <Route path='/review' element={<ReviewPage />} />
+        <Route path='/account' element={<Account />} />
         {isAdmin && (
           <>
             <Route path='/admin' element={<AdminDashboard />} />

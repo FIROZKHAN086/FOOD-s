@@ -11,7 +11,7 @@ const Cart = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white py-20 px-4">
+    <div className="min-h-screen font-lato bg-white py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-gray-800 mb-10 flex items-center gap-3">
           <FaShoppingCart className="text-purple-600" />

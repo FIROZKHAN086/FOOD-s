@@ -46,7 +46,7 @@ const FoodMenu = () => {
     }
 
     return (
-        <div className="min-h-screen  relative bg-gradient-to-br from-slate-900 to-slate-800 py-8">
+        <div className="min-h-screen font-lato  relative bg-gradient-to-br from-slate-900 to-slate-800 py-8">
             <div className="max-w-[2000px] mx-auto px-4">
                 <h1 className="text-6xl font-bold text-center mb-10 text-white">
                     Our Food Menu
@@ -87,7 +87,7 @@ const FoodMenu = () => {
                                         group-hover:translate-y-0 transition-transform duration-300">
                                 <div className="flex justify-between items-center mb-3">
                                     <h2 className="text-2xl font-bold text-white group-hover:text-purple-400">{item.name}</h2>
-                                    <span className="text-xl font-bold text-purple-400">${item.price}</span>
+                                    <span className="text-xl font-bold text-[#e2e4db]">${item.price}</span>
                                 </div>
                                 <p className="text-gray-300 text-sm mb-4">{item.description}</p>
                                 <button 

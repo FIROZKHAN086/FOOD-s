@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useFoodContext } from "../Context/Context";
 import { useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
-
+import { toast } from "react-hot-toast";
 
 const Navbar = ({ setAuth, IsAdmin }) => {
   const { cart } = useFoodContext();
@@ -18,13 +18,15 @@ const Navbar = ({ setAuth, IsAdmin }) => {
       localStorage.removeItem('userName');
       localStorage.removeItem('userEmail');
       setIsDropdownOpen(false);
+      toast.success('Logged out successfully');
     } catch (error) {
       console.error("Error signing out:", error);
+      toast.error('Error signing out');
     }
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-10 bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600 shadow-lg px-6 py-4">
+    <nav className="fixed top-0 font-open-sans left-0 right-0 z-10 bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600 shadow-lg px-6 py-4">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="text-3xl font-bold text-white tracking-wider hover:text-pink-300 transition-all duration-300">
@@ -33,12 +35,34 @@ const Navbar = ({ setAuth, IsAdmin }) => {
 
         {/* Center Nav Links */}
         <ul className="hidden md:flex gap-8 text-white font-medium">
-          {["Home", "Shop", "About", "Contact"].map((item, idx) => (
-           <Link to={'/'}> <li key={idx} className="group relative cursor-pointer text-white hover:text-pink-400 transition text-lg">
-              {item}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-pink-400 transition-all duration-300 group-hover:w-full"></span>
-            </li></Link>
-          ))}
+          <li className="relative group cursor-pointer">
+            <Link to="/" className="hover:text-[#0f184b] transition-all duration-300">
+              Home
+            </Link>
+            <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-[#0f184b] group-hover:w-full transition-all duration-300"></span>
+           
+          </li>
+          <li className="relative group cursor-pointer">
+            <Link to="/" className="hover:text-[#0f184b] transition-all duration-300">
+              Shop
+            </Link>
+            <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-[#0f184b] group-hover:w-full transition-all duration-300"></span>
+            
+          </li>
+          <li className="relative group cursor-pointer">
+            <Link to="/about" className="hover:text-[#0f184b] transition-all duration-300">
+              About
+            </Link>
+            <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-[#0f184b] group-hover:w-full transition-all duration-300"></span>
+            
+          </li>
+          <li className="relative group cursor-pointer">
+            <Link to="/contact" className="hover:text-[#0f184b] transition-all duration-300">
+              Contact
+            </Link>
+            <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-[#0f184b] group-hover:w-full transition-all duration-300"></span>
+            
+          </li>
         </ul>
 
         {/* Icons */}

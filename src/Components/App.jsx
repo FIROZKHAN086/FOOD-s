@@ -3,7 +3,7 @@ import { FaApple, FaGooglePlay } from 'react-icons/fa';
 
 const AppDownload = () => {
   return (
-    <section className="relative bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 py-20 overflow-hidden">
+    <section className="relative font-mono bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 py-20 overflow-hidden">
       {/* Decorative circles */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-0 right-0 w-72 h-72 bg-teal-500 rounded-full blur-3xl"></div>

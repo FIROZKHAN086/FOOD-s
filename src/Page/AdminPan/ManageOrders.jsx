@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useFoodContext } from "../../Context/Context";
-import { FaCheck, FaTimes, FaSpinner } from "react-icons/fa";
+import { FaCheck, FaTimes, FaSpinner, FaMoneyBillWave, FaCreditCard, FaMobileAlt } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import { format } from "date-fns";
 
@@ -10,20 +10,23 @@ const ManageOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState("all");
+  const [selectedPaymentStatus, setSelectedPaymentStatus] = useState("all");
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showOrderModal, setShowOrderModal] = useState(false);
 
   useEffect(() => {
     fetchOrders();
-  }, [selectedStatus]);
+  }, [selectedStatus, selectedPaymentStatus]);
 
   const fetchOrders = async () => {
     try {
-      const endpoint =
-        selectedStatus === "all"
-          ? `${url}/api/orders`
-          : `${url}/api/orders/status/${selectedStatus}`;
-
+      let endpoint = `${url}/api/orders`;
+      if (selectedStatus !== "all" || selectedPaymentStatus !== "all") {
+        endpoint += `?status=${selectedStatus}&paymentStatus=${selectedPaymentStatus}`;
+      }
       const response = await axios.get(endpoint);
-      setOrders(response.data);
+      setOrders(response.data.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -32,22 +35,34 @@ const ManageOrders = () => {
     }
   };
 
-  const handleStatusUpdate = async (orderId, newStatus) => {
+  const handlePaymentStatusUpdate = async (orderId, newStatus) => {
+    try {
+      await axios.put(`${url}/api/orders/${orderId}/payment-status`, {
+        status: newStatus,
+        notes: `Payment status updated to ${newStatus}`
+      });
+      toast.success("Payment status updated successfully");
+      fetchOrders();
+      setShowPaymentModal(false);
+    } catch (error) {
+      console.error("Error updating payment status:", error);
+      toast.error("Failed to update payment status");
+    }
+  };
+
+  const handleOrderStatusUpdate = async (orderId, newStatus) => {
     try {
       await axios.put(`${url}/api/orders/${orderId}/status`, {
-        status: newStatus,
+        status: newStatus
       });
       toast.success("Order status updated successfully");
       fetchOrders();
+      setShowOrderModal(false);
     } catch (error) {
       console.error("Error updating order status:", error);
       toast.error("Failed to update order status");
     }
   };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
@@ -64,6 +79,36 @@ const ManageOrders = () => {
     }
   };
 
+  const getPaymentStatusColor = (status) => {
+    switch (status.toLowerCase()) {
+      case "pending":
+        return "bg-yellow-400 text-yellow-900";
+      case "processing":
+        return "bg-blue-400 text-blue-900";
+      case "completed":
+        return "bg-green-400 text-green-900";
+      case "failed":
+        return "bg-red-400 text-red-900";
+      case "refunded":
+        return "bg-purple-400 text-purple-900";
+      default:
+        return "bg-gray-400 text-gray-900";
+    }
+  };
+
+  const getPaymentMethodIcon = (method) => {
+    switch (method.toLowerCase()) {
+      case "cash":
+        return <FaMoneyBillWave className="text-green-500" />;
+      case "card":
+        return <FaCreditCard className="text-blue-500" />;
+      case "upi":
+        return <FaMobileAlt className="text-purple-500" />;
+      default:
+        return null;
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-50 to-slate-100">
@@ -75,19 +120,33 @@ const ManageOrders = () => {
   return (
     <div className="min-h-screen px-4 mt-20 py-12 bg-gradient-to-br from-sky-100 to-slate-200">
       <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-10">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
           <h2 className="text-3xl font-bold text-slate-800">Manage Orders</h2>
-          <select
-            value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-4 py-2 bg-white border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400"
-          >
-            <option value="all">All Orders</option>
-            <option value="pending">Pending</option>
-            <option value="processing">Processing</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
+          <div className="flex gap-4">
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              className="px-4 py-2 bg-white border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="all">All Order Status</option>
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <select
+              value={selectedPaymentStatus}
+              onChange={(e) => setSelectedPaymentStatus(e.target.value)}
+              className="px-4 py-2 bg-white border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="all">All Payment Status</option>
+              <option value="pending">Pending</option>
+              <option value="processing">Processing</option>
+              <option value="completed">Completed</option>
+              <option value="failed">Failed</option>
+              <option value="refunded">Refunded</option>
+            </select>
+          </div>
         </div>
 
         <div className="grid gap-6">
@@ -108,38 +167,20 @@ const ManageOrders = () => {
                 <div className="flex items-center gap-2">
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                      order.status
+                      order.orderStatus
                     )}`}
                   >
-                    {order.status}
+                    {order.orderStatus}
                   </span>
-                  {order.status === "pending" && (
-                    <button
-                      onClick={() =>
-                        handleStatusUpdate(order._id, "processing")
-                      }
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      <FaCheck />
-                    </button>
-                  )}
-                  {order.status === "processing" && (
-                    <button
-                      onClick={() => handleStatusUpdate(order._id, "delivered")}
-                      className="text-green-600 hover:text-green-800"
-                    >
-                      <FaCheck />
-                    </button>
-                  )}
-                  {(order.status === "pending" ||
-                    order.status === "processing") && (
-                    <button
-                      onClick={() => handleStatusUpdate(order._id, "cancelled")}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      <FaTimes />
-                    </button>
-                  )}
+                  <button
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setShowOrderModal(true);
+                    }}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    <FaCheck />
+                  </button>
                 </div>
               </div>
 
@@ -172,19 +213,46 @@ const ManageOrders = () => {
               </div>
 
               <div className="flex justify-between items-center pt-4 border-t border-slate-200">
-                <p className="text-sm text-slate-500">
-                  Payment:{" "}
-                  <span className="font-medium text-slate-700">
-                    {order.paymentMethod}
-                  </span>{" "}
-                  ({order.paymentStatus})
-                </p>
+                <div className="flex items-center gap-2">
+                  {getPaymentMethodIcon(order.paymentMethod)}
+                  <span className="text-sm text-slate-500">
+                    {order.paymentMethod.toUpperCase()}
+                  </span>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(
+                      order.paymentStatus
+                    )}`}
+                  >
+                    {order.paymentStatus}
+                  </span>
+                </div>
                 <div className="text-right">
                   <p className="text-sm text-slate-500">Total</p>
                   <p className="text-xl font-bold text-slate-800">
                     ${order.totalAmount.toFixed(2)}
                   </p>
                 </div>
+              </div>
+
+              <div className="mt-4 flex justify-end gap-2">
+                <button
+                  onClick={() => {
+                    setSelectedOrder(order);
+                    setShowPaymentModal(true);
+                  }}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                >
+                  Update Payment
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedOrder(order);
+                    setShowOrderModal(true);
+                  }}
+                  className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                >
+                  Update Order
+                </button>
               </div>
             </div>
           ))}
@@ -201,6 +269,87 @@ const ManageOrders = () => {
           )}
         </div>
       </div>
+
+      {/* Payment Status Modal */}
+      {showPaymentModal && selectedOrder && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold mb-4">Update Payment Status</h3>
+            <div className="space-y-4">
+              <select
+                value={selectedOrder.paymentStatus}
+                onChange={(e) => {
+                  setSelectedOrder({
+                    ...selectedOrder,
+                    paymentStatus: e.target.value
+                  });
+                }}
+                className="w-full px-4 py-2 border rounded-lg"
+              >
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="completed">Completed</option>
+                <option value="failed">Failed</option>
+                <option value="refunded">Refunded</option>
+              </select>
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => setShowPaymentModal(false)}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handlePaymentStatusUpdate(selectedOrder._id, selectedOrder.paymentStatus)}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                >
+                  Update
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Order Status Modal */}
+      {showOrderModal && selectedOrder && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold mb-4">Update Order Status</h3>
+            <div className="space-y-4">
+              <select
+                value={selectedOrder.orderStatus}
+                onChange={(e) => {
+                  setSelectedOrder({
+                    ...selectedOrder,
+                    orderStatus: e.target.value
+                  });
+                }}
+                className="w-full px-4 py-2 border rounded-lg"
+              >
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => setShowOrderModal(false)}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleOrderStatusUpdate(selectedOrder._id, selectedOrder.orderStatus)}
+                  className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                >
+                  Update
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

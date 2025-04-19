@@ -7,7 +7,7 @@ const Hero = () => {
     <div className="top-8 left-0 mt-12 w-screen h-screen bg-white  md:fixed mb-[75%]  md:mb-10 py-7 px-6 lg:px-20 flex flex-col lg:flex-row items-center justify-between">
       {/* Left Text Section */}
       <motion.div 
-        className="max-w-xl space-y-6 text-center lg:text-left"
+        className="max-w-xl font-poppins space-y-6 text-center lg:text-left"
         initial={{ opacity: 0, x: -100 }} // Initial state: hidden and slightly off-screen
         animate={{ opacity: 1, x: 0 }}  // Animate to fully visible and in position
         transition={{ duration: 1, type: "spring", stiffness: 120 }}

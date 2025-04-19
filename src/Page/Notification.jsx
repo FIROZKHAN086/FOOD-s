@@ -84,7 +84,7 @@ const NotificationPage = () => {
   };
 
   return (
-    <div className=" inset-0  bg-gray-50 pt-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <div className=" font-sans inset-0 my-10  bg-gray-50 pt-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <div className="max-w-4xl mx-auto h-full flex flex-col">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -18,11 +18,47 @@ const CheckoutPage = () => {
 
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentDetails, setPaymentDetails] = useState({
+    card: {
+      cardHolderName: "",
+      cardNumber: "",
+      expiryDate: "",
+      cvv: ""
+    },
+    upi: {
+      upiId: "",
+      transactionId: ""
+    }
+  });
+  const [deliveryAddress, setDeliveryAddress] = useState({
+    street: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: ""
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const handlePaymentDetailsChange = (e, method, field) => {
+    setPaymentDetails(prev => ({
+      ...prev,
+      [method]: {
+        ...prev[method],
+        [field]: e.target.value
+      }
+    }));
+  };
+
+  const handleAddressChange = (e) => {
+    setDeliveryAddress(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
 
   const handleOrderSubmit = async () => {
     if (!user) {
@@ -32,6 +68,21 @@ const CheckoutPage = () => {
 
     if (cart.length === 0) {
       toast.error("Your cart is empty.");
+      return;
+    }
+
+    if (!deliveryAddress.street || !deliveryAddress.city || !deliveryAddress.state || !deliveryAddress.zipCode) {
+      toast.error("Please fill in all delivery address fields.");
+      return;
+    }
+
+    if (paymentMethod === "card" && (!paymentDetails.card.cardHolderName || !paymentDetails.card.cardNumber || !paymentDetails.card.expiryDate || !paymentDetails.card.cvv)) {
+      toast.error("Please fill in all card details.");
+      return;
+    }
+
+    if (paymentMethod === "upi" && (!paymentDetails.upi.upiId || !paymentDetails.upi.transactionId)) {
+      toast.error("Please fill in all UPI details.");
       return;
     }
 
@@ -48,8 +99,10 @@ const CheckoutPage = () => {
       })),
       totalAmount: getCartTotal(),
       paymentMethod,
-      paymentStatus: paymentMethod === "cash" ? "pending" : "paid",
-      status: "pending",
+      paymentDetails: paymentMethod !== "cash" ? paymentDetails : undefined,
+      deliveryAddress,
+      paymentStatus: "pending",
+      orderStatus: "pending"
     };
 
     try {
@@ -100,6 +153,51 @@ const CheckoutPage = () => {
               </div>
             </motion.div>
 
+            {/* Delivery Address */}
+            <motion.div
+              variants={fadeInUp}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.3 }}
+              className="space-y-4"
+            >
+              <h3 className="text-xl font-semibold">Delivery Address</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  name="street"
+                  placeholder="Street Address"
+                  value={deliveryAddress.street}
+                  onChange={handleAddressChange}
+                  className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+                <input
+                  type="text"
+                  name="city"
+                  placeholder="City"
+                  value={deliveryAddress.city}
+                  onChange={handleAddressChange}
+                  className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+                <input
+                  type="text"
+                  name="state"
+                  placeholder="State"
+                  value={deliveryAddress.state}
+                  onChange={handleAddressChange}
+                  className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+                <input
+                  type="text"
+                  name="zipCode"
+                  placeholder="ZIP Code"
+                  value={deliveryAddress.zipCode}
+                  onChange={handleAddressChange}
+                  className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </motion.div>
+
             {/* Cart Items */}
             <motion.div
               variants={fadeInUp}
@@ -128,30 +226,84 @@ const CheckoutPage = () => {
               </div>
             </motion.div>
 
-            {/* Total + Payment */}
+            {/* Payment Method */}
             <motion.div
               variants={fadeInUp}
               initial="hidden"
               animate="visible"
-              transition={{ delay: 0.6 }}
+              transition={{ delay: 0.5 }}
               className="space-y-6"
             >
-              <div className="flex justify-between items-center bg-gray-50 border border-gray-200 p-6 rounded-xl">
-                <span className="text-xl font-semibold">Total</span>
-                <span className="text-2xl font-bold text-blue-600">${getCartTotal().toFixed(2)}</span>
-              </div>
-
               <div className="p-6 bg-gray-50 border border-gray-200 rounded-xl">
-                <label className="block text-lg font-medium mb-2">Payment Method</label>
+                <label className="block text-lg font-medium mb-4">Payment Method</label>
                 <select
                   value={paymentMethod}
                   onChange={(e) => setPaymentMethod(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 mb-4"
                 >
                   <option value="cash">Cash on Delivery</option>
                   <option value="card">Credit/Debit Card</option>
-                  <option value="online">Online Payment</option>
+                  <option value="upi">UPI Payment</option>
                 </select>
+
+                {paymentMethod === "card" && (
+                  <div className="space-y-4">
+                    <input
+                      type="text"
+                      placeholder="Card Holder Name"
+                      value={paymentDetails.card.cardHolderName}
+                      onChange={(e) => handlePaymentDetailsChange(e, "card", "cardHolderName")}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Card Number"
+                      value={paymentDetails.card.cardNumber}
+                      onChange={(e) => handlePaymentDetailsChange(e, "card", "cardNumber")}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                    <div className="grid grid-cols-2 gap-4">
+                      <input
+                        type="text"
+                        placeholder="Expiry Date (MM/YY)"
+                        value={paymentDetails.card.expiryDate}
+                        onChange={(e) => handlePaymentDetailsChange(e, "card", "expiryDate")}
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                      />
+                      <input
+                        type="text"
+                        placeholder="CVV"
+                        value={paymentDetails.card.cvv}
+                        onChange={(e) => handlePaymentDetailsChange(e, "card", "cvv")}
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {paymentMethod === "upi" && (
+                  <div className="space-y-4">
+                    <input
+                      type="text"
+                      placeholder="UPI ID"
+                      value={paymentDetails.upi.upiId}
+                      onChange={(e) => handlePaymentDetailsChange(e, "upi", "upiId")}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Transaction ID"
+                      value={paymentDetails.upi.transactionId}
+                      onChange={(e) => handlePaymentDetailsChange(e, "upi", "transactionId")}
+                      className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="flex justify-between items-center bg-gray-50 border border-gray-200 p-6 rounded-xl">
+                <span className="text-xl font-semibold">Total</span>
+                <span className="text-2xl font-bold text-blue-600">${getCartTotal().toFixed(2)}</span>
               </div>
             </motion.div>
 

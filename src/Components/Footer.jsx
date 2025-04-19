@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';  // Importing Framer Motion for animatio
 
 const Footer = () => {
   return (
-    <footer className="relative bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 overflow-hidden">
+    <footer className="relative font-poppins bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 overflow-hidden">
       {/* Decorative Elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
