@@ -14,6 +14,7 @@ const ManageOrders = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showOrderModal, setShowOrderModal] = useState(false);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -26,8 +27,8 @@ const ManageOrders = () => {
         endpoint += `?status=${selectedStatus}&paymentStatus=${selectedPaymentStatus}`;
       }
       const response = await axios.get(endpoint);
-      console.log(response.data);
-      setOrders(response.data);
+      console.log("Orders response:", response.data);
+      setOrders(response.data.data || response.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -37,33 +38,60 @@ const ManageOrders = () => {
   };
 
   const handlePaymentStatusUpdate = async (orderId, newStatus) => {
+    if (!orderId || !newStatus) {
+      toast.error("Invalid order or status");
+      return;
+    }
+
+    setUpdatingStatus(true);
     try {
-      await axios.put(`${url}/api/orders/${orderId}/payment-status`, {
+      const response = await axios.put(`${url}/api/orders/${orderId}/payment-status`, {
         status: newStatus,
-        transactionId: `txn-${Date.now()}`, // Add this dummy or actual value
+        transactionId: `txn-${Date.now()}`,
         notes: `Payment status updated to ${newStatus}`
       });
-      toast.success("Payment status updated successfully");
-      fetchOrders();
-      setShowPaymentModal(false);
+
+      if (response.data.success) {
+        toast.success("Payment status updated successfully");
+        fetchOrders();
+        setShowPaymentModal(false);
+      } else {
+        toast.error(response.data.message || "Failed to update payment status");
+      }
     } catch (error) {
       console.error("Error updating payment status:", error);
-      toast.error("Failed to update payment status");
+      const errorMessage = error.response?.data?.message || "Failed to update payment status";
+      toast.error(errorMessage);
+    } finally {
+      setUpdatingStatus(false);
     }
   };
-  
 
   const handleOrderStatusUpdate = async (orderId, newStatus) => {
+    if (!orderId || !newStatus) {
+      toast.error("Invalid order or status");
+      return;
+    }
+
+    setUpdatingStatus(true);
     try {
-      await axios.put(`${url}/api/orders/${orderId}/status`, {
+      const response = await axios.put(`${url}/api/orders/${orderId}/status`, {
         status: newStatus
       });
-      toast.success("Order status updated successfully");
-      fetchOrders();
-      setShowOrderModal(false);
+
+      if (response.data.success) {
+        toast.success("Order status updated successfully");
+        fetchOrders();
+        setShowOrderModal(false);
+      } else {
+        toast.error(response.data.message || "Failed to update order status");
+      }
     } catch (error) {
       console.error("Error updating order status:", error);
-      toast.error("Failed to update order status");
+      const errorMessage = error.response?.data?.message || "Failed to update order status";
+      toast.error(errorMessage);
+    } finally {
+      setUpdatingStatus(false);
     }
   };
 
@@ -164,10 +192,10 @@ const ManageOrders = () => {
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <p className="text-xs text-slate-500 font-medium">
-                    Order #{order._id.slice(-6).toUpperCase()}
+                    Order #{order._id?.slice(-6)?.toUpperCase() || 'N/A'}
                   </p>
                   <p className="text-xs text-slate-400">
-                    {format(new Date(order.createdAt), "dd MMM yyyy, hh:mm a")}
+                    {order.createdAt ? format(new Date(order.createdAt), "dd MMM yyyy, hh:mm a") : 'N/A'}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -176,7 +204,7 @@ const ManageOrders = () => {
                       order.orderStatus
                     )}`}
                   >
-                    {order.orderStatus}
+                    {order.orderStatus || 'N/A'}
                   </span>
                   <button
                     onClick={() => {
@@ -191,14 +219,14 @@ const ManageOrders = () => {
               </div>
 
               <div className="mb-4 space-y-3">
-                {order.products.map((item, idx) => (
+                {order.products?.map((item, idx) => (
                   <div
                     key={idx}
                     className="flex justify-between items-center bg-white rounded-md px-4 py-3 shadow-sm"
                   >
                     <div className="flex items-center gap-3">
                       <img
-                        src={item.image}
+                        src={item.image || "https://via.placeholder.com/150"}
                         alt={item.name}
                         className="w-12 h-12 object-cover rounded-lg"
                       />
@@ -222,20 +250,20 @@ const ManageOrders = () => {
                 <div className="flex items-center gap-2">
                   {getPaymentMethodIcon(order.paymentMethod)}
                   <span className="text-sm text-slate-500">
-                    {order.paymentMethod.toUpperCase()}
+                    {order.paymentMethod?.toUpperCase() || 'N/A'}
                   </span>
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(
                       order.paymentStatus
                     )}`}
                   >
-                    {order.paymentStatus}
+                    {order.paymentStatus || 'N/A'}
                   </span>
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-slate-500">Total</p>
                   <p className="text-xl font-bold text-slate-800">
-                    ${order.totalAmount.toFixed(2)}
+                    ${order.totalAmount?.toFixed(2) || '0.00'}
                   </p>
                 </div>
               </div>
@@ -247,8 +275,13 @@ const ManageOrders = () => {
                     setShowPaymentModal(true);
                   }}
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                  disabled={updatingStatus}
                 >
-                  Update Payment
+                  {updatingStatus ? (
+                    <FaSpinner className="animate-spin" />
+                  ) : (
+                    "Update Payment"
+                  )}
                 </button>
                 <button
                   onClick={() => {
@@ -256,8 +289,13 @@ const ManageOrders = () => {
                     setShowOrderModal(true);
                   }}
                   className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                  disabled={updatingStatus}
                 >
-                  Update Order
+                  {updatingStatus ? (
+                    <FaSpinner className="animate-spin" />
+                  ) : (
+                    "Update Order"
+                  )}
                 </button>
               </div>
             </div>
@@ -291,6 +329,7 @@ const ManageOrders = () => {
                   });
                 }}
                 className="w-full px-4 py-2 border rounded-lg"
+                disabled={updatingStatus}
               >
                 <option value="pending">Pending</option>
                 <option value="processing">Processing</option>
@@ -302,14 +341,20 @@ const ManageOrders = () => {
                 <button
                   onClick={() => setShowPaymentModal(false)}
                   className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                  disabled={updatingStatus}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => handlePaymentStatusUpdate(selectedOrder._id, selectedOrder.paymentStatus)}
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                  disabled={updatingStatus}
                 >
-                  Update
+                  {updatingStatus ? (
+                    <FaSpinner className="animate-spin" />
+                  ) : (
+                    "Update"
+                  )}
                 </button>
               </div>
             </div>
@@ -332,6 +377,7 @@ const ManageOrders = () => {
                   });
                 }}
                 className="w-full px-4 py-2 border rounded-lg"
+                disabled={updatingStatus}
               >
                 <option value="pending">Pending</option>
                 <option value="processing">Processing</option>
@@ -342,14 +388,20 @@ const ManageOrders = () => {
                 <button
                   onClick={() => setShowOrderModal(false)}
                   className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                  disabled={updatingStatus}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => handleOrderStatusUpdate(selectedOrder._id, selectedOrder.orderStatus)}
                   className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                  disabled={updatingStatus}
                 >
-                  Update
+                  {updatingStatus ? (
+                    <FaSpinner className="animate-spin" />
+                  ) : (
+                    "Update"
+                  )}
                 </button>
               </div>
             </div>
