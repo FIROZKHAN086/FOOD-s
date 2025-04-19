@@ -24,17 +24,17 @@ export default defineConfig({
         theme_color: '#16a34a',
         icons: [
           {
-            src: '/icons/android-icon-192x192.png',
+            src: './icons/android-icon-192x192.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: '/icons/apple-icon-144x144.png',
+            src: './icons/apple-icon-144x144.png',
             sizes: '512x512',
             type: 'image/png'
           },
           {
-            src: '/icons/apple-icon-144x144.png',
+            src: './icons/apple-icon-144x144.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
