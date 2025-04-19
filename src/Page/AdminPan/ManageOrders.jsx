@@ -47,7 +47,7 @@ const ManageOrders = () => {
   
     setUpdatingStatus(true);
     try {
-      const response = await axios.put(`${url}/api/orders/${orderId}/status`, {
+      const response = await axios.put(`${url}/api/orders/${orderId}/payment-status`, {
         status: newStatus,
         transactionId: `txn-${Date.now()}`,
         notes: `Payment status updated to ${newStatus}`,
@@ -79,7 +79,7 @@ const ManageOrders = () => {
 
     setUpdatingStatus(true);
     try {
-      const response = await axios.put(`${url}/api/orders/${orderId}/status`, {
+      const response = await axios.put(`${url}/api/orders/${orderId}/order-status`, {
         status: newStatus
       });
 
