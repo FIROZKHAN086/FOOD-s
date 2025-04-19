@@ -27,8 +27,9 @@ const ManageOrders = () => {
         endpoint += `?status=${selectedStatus}&paymentStatus=${selectedPaymentStatus}`;
       }
       const response = await axios.get(endpoint);
-      console.log("Orders response:", response.data);
-      setOrders(response.data.data || response.data);
+      console.log("Orders response:", response.data[12].paymentStatus
+      );
+      setOrders(response.data || response.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -45,15 +46,15 @@ const ManageOrders = () => {
   
     setUpdatingStatus(true);
     try {
-      const response = await axios.put(`${url}/api/orders/${orderId}/payment-status`, {
+      const response = await axios.put(`${url}/api/orders/${orderId}/status`, {
         status: newStatus,
         transactionId: `txn-${Date.now()}`,
-        notes: `Payment status updated to ${newStatus}`
+        notes: `Payment status updated to ${newStatus}`,
       });
   
-      if (response.data.success) {
+      if (response.data) {
         toast.success("Payment status updated successfully");
-        fetchOrders();  // Fetch updated orders list
+        fetchOrders();
         setShowPaymentModal(false);
       } else {
         toast.error(response.data.message || "Failed to update payment status");
@@ -66,20 +67,22 @@ const ManageOrders = () => {
       setUpdatingStatus(false);
     }
   };
+  
+  
 
   const handleOrderStatusUpdate = async (orderId, newStatus) => {
     if (!orderId || !newStatus) {
       toast.error("Invalid order or status");
       return;
     }
-  
+
     setUpdatingStatus(true);
     try {
       const response = await axios.put(`${url}/api/orders/${orderId}/status`, {
         status: newStatus
       });
-  
-      if (response.data.success) {
+
+      if (response.data) {
         toast.success("Order status updated successfully");
         fetchOrders();  // Fetch updated orders list
         setShowOrderModal(false);
@@ -94,7 +97,7 @@ const ManageOrders = () => {
       setUpdatingStatus(false);
     }
   };
-  
+
 
   const getStatusColor = (status) => {
     if (!status || typeof status !== "string") return "bg-gray-400 text-gray-900";
@@ -202,10 +205,11 @@ const ManageOrders = () => {
                 <div className="flex items-center gap-2">
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                      order.orderStatus
+                      order.status
                     )}`}
                   >
-                    {order.orderStatus || 'N/A'}
+                    {order.status
+                      || 'N/A'}
                   </span>
                   <button
                     onClick={() => {
@@ -347,7 +351,10 @@ const ManageOrders = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={() => handlePaymentStatusUpdate(selectedOrder._id, selectedOrder.paymentStatus)}
+                  onClick={() =>  handlePaymentStatusUpdate(
+                    selectedOrder._id,
+                    selectedOrder.paymentStatus
+                  )}
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                   disabled={updatingStatus}
                 >
