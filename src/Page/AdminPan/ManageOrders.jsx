@@ -18,6 +18,7 @@ const ManageOrders = () => {
 
   useEffect(() => {
     fetchOrders();
+  
   }, [selectedStatus, selectedPaymentStatus]);
 
   const fetchOrders = async () => {
@@ -208,6 +209,7 @@ const ManageOrders = () => {
                       order.status
                     )}`}
                   >
+                    
                     {order.status
                       || 'N/A'}
                   </span>
@@ -262,7 +264,7 @@ const ManageOrders = () => {
                       order.paymentStatus
                     )}`}
                   >
-                    {order.paymentStatus || 'N/A'}
+                    {order.paymentStatus?.toUpperCase() || 'N/A'}
                   </span>
                 </div>
                 <div className="text-right">
