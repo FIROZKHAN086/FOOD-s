@@ -6,11 +6,13 @@ import { format } from "date-fns";
 import { FaSpinner } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const MyOrders = () => {
   const { url } = useFoodContext();
   const auth = getAuth();
-  const user = auth.currentUser;
+  const [user, setUser] = useState(auth.currentUser);
+  const navigate = useNavigate();
 
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,6 +21,18 @@ const MyOrders = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // Listen for auth state changes
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+      if (!user) {
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -29,21 +43,30 @@ const MyOrders = () => {
 
       try {
         const res = await axios.get(`${url}/api/orders/user/${user.uid}`);
-        setOrders(res.data);
-        setError(null);
+        if (res.data.success) {
+          setOrders(res.data.data);
+          setError(null);
+        } else {
+          setError(res.data.message || "Failed to fetch orders");
+          toast.error(res.data.message || "Failed to fetch orders");
+        }
       } catch (error) {
         console.error("Error fetching orders:", error);
-        setError("Failed to fetch orders. Please try again later.");
-        toast.error("Failed to fetch orders");
+        setError(error.response?.data?.message || "Failed to fetch orders. Please try again later.");
+        toast.error(error.response?.data?.message || "Failed to fetch orders");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchOrders();
+    if (user) {
+      fetchOrders();
+    }
   }, [user, url]);
 
   const getStatusColor = (status) => {
+    if (!status) return "bg-gray-300 text-gray-800";
+    
     switch (status.toLowerCase()) {
       case "pending":
         return "bg-yellow-400 text-yellow-800";
@@ -61,9 +84,15 @@ const MyOrders = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center text-gray-800 px-4">
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-4">
           <h2 className="text-2xl font-bold">Please login to view your orders</h2>
           <p className="text-gray-500">You need to be logged in to see your order history.</p>
+          <button 
+            onClick={() => navigate('/login')}
+            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition"
+          >
+            Login
+          </button>
         </div>
       </div>
     );
@@ -118,10 +147,10 @@ const MyOrders = () => {
                   </div>
                   <span
                     className={`px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(
-                      order.status
+                      order.orderStatus
                     )}`}
                   >
-                    {order.status}
+                    {order.orderStatus || "N/A"}
                   </span>
                 </div>
 
@@ -154,7 +183,7 @@ const MyOrders = () => {
 
                 <div className="flex justify-between items-center pt-4 border-t border-gray-100">
                   <div className="text-sm text-gray-500">
-                    Payment: {order.paymentMethod} ({order.paymentStatus})
+                    Payment: {order.paymentMethod} ({order.paymentStatus || "N/A"})
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-gray-500">Total Amount</p>

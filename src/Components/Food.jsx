@@ -30,7 +30,7 @@ const FoodMenu = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-8 flex items-center justify-center">
+            <div className="min-h-screen z-40 bg-gradient-to-br from-slate-900 to-slate-800 py-8 flex items-center justify-center">
                 <div className="animate-spin w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full"></div>
                 <div className="ml-4 text-white text-2xl font-medium animate-pulse">Loading<span className="animate-bounce">.</span><span className="animate-bounce delay-100">.</span><span className="animate-bounce delay-200">.</span></div>
             </div>
@@ -39,7 +39,7 @@ const FoodMenu = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-8 flex items-center justify-center">
+            <div className="min-h-screen z-40 bg-gradient-to-br from-slate-900 to-slate-800 py-8 flex items-center justify-center">
                 <div className="text-red-500 text-2xl">Error: {error}</div>
             </div>
         );

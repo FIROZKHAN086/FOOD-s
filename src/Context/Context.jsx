@@ -90,6 +90,7 @@ export const FoodProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         const res = await api.get("/api/foods");
+    
         if (isMounted) {
           if (res.data && Array.isArray(res.data)) {
             dispatch({ type: "SET_ITEMS", payload: res.data });

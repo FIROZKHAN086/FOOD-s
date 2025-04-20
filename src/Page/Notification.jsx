@@ -10,70 +10,94 @@ import { useNavigate } from 'react-router-dom';
 const NotificationPage = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
   const auth = getAuth();
   const navigate = useNavigate();
-  const {url} = useFoodContext()
+  const { url } = useFoodContext();
 
-  useEffect(()=>{
-    window.scrollTo(0,0)
-  },[])
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Listen for auth state changes
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+      if (!user) {
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        if (!auth.currentUser) {
+        if (!user) {
           toast.error("Please login to view notifications");
           return;
         }
 
-        const response = await axios.get(`${url}/api/orders/user/${auth.currentUser.uid}`);
-        setOrders(response.data);
+        const response = await axios.get(`${url}/api/orders/user/${user.uid}`);
+        if (response.data.success) {
+          setOrders(response.data.data);
+        } else {
+          toast.error(response.data.message || "Failed to fetch orders");
+        }
       } catch (error) {
-        toast.error("Failed to fetch orders");
+        console.error("Error in fetchOrders:", error);
+        toast.error(error.response?.data?.message || "Failed to fetch orders");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchOrders();
-  }, [auth.currentUser]);
+    if (user) {
+      fetchOrders();
+    }
+  }, [user, url]);
 
   const getStatusColor = (status) => {
+    if (!status) return 'bg-gray-100 text-gray-800';
+    
     switch (status.toLowerCase()) {
       case 'pending':
         return 'bg-yellow-100 text-yellow-800';
-      case 'confirmed':
+      case 'processing':
         return 'bg-blue-100 text-blue-800';
-      case 'delivering':
-        return 'bg-indigo-100 text-indigo-800';
       case 'delivered':
         return 'bg-green-100 text-green-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusMessage = (status) => {
+    if (!status) return { message: '', icon: null };
+    
     switch (status.toLowerCase()) {
       case 'pending':
         return {
           message: 'Your order is pending confirmation',
           icon: <FaSpinner className="animate-spin text-yellow-600" />
         };
-      case 'confirmed':
+      case 'processing':
         return {
-          message: 'Your order has been confirmed',
+          message: 'Your order is being processed',
           icon: <FaCheckCircle className="text-blue-600" />
-        };
-      case 'delivering':
-        return {
-          message: 'Your order is out for delivery',
-          icon: <FaTruck className="text-indigo-600" />
         };
       case 'delivered':
         return {
           message: 'Your order has been delivered',
           icon: <FaCheckCircle className="text-green-600" />
+        };
+      case 'cancelled':
+        return {
+          message: 'Your order has been cancelled',
+          icon: <FaTimes className="text-red-600" />
         };
       default:
         return {
@@ -83,8 +107,25 @@ const NotificationPage = () => {
     }
   };
 
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center text-gray-800 px-4">
+        <div className="text-center space-y-4">
+          <h2 className="text-2xl font-bold">Please login to view notifications</h2>
+          <p className="text-gray-500">You need to be logged in to see your notifications.</p>
+          <button 
+            onClick={() => navigate('/login')}
+            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition"
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className=" font-sans inset-0 my-10  bg-gray-50 pt-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <div className="font-sans inset-0 my-10 bg-gray-50 pt-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <div className="max-w-4xl mx-auto h-full flex flex-col">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -135,19 +176,20 @@ const NotificationPage = () => {
                           {new Date(order.createdAt).toLocaleDateString()}
                         </p>
                         <div className="flex items-center gap-2 mt-2">
-                          {getStatusMessage(order.status).icon}
-                          <p className="text-sm italic">{getStatusMessage(order.status).message}</p>
+                          {getStatusMessage(order.orderStatus).icon}
+                          <p className="text-sm italic">{getStatusMessage(order.orderStatus).message}</p>
                         </div>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
-                        {order.status}
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.orderStatus)}`}>
+                        {order.orderStatus || "N/A"}
                       </span>
                     </div>
 
                     <div className="mt-4">
                       <div className="text-sm text-gray-600">
-                        <p>Total Amount: ${order.totalAmount}</p>
+                        <p>Total Amount: ${order.totalAmount?.toFixed(2)}</p>
                         <p>Payment Method: {order.paymentMethod}</p>
+                        <p>Payment Status: {order.paymentStatus || "N/A"}</p>
                       </div>
                       
                       <div className="mt-4 space-y-2">
@@ -157,6 +199,9 @@ const NotificationPage = () => {
                               src={product.image}
                               alt={product.name}
                               className="w-12 h-12 rounded-lg object-cover"
+                              onError={(e) => {
+                                e.target.src = "https://via.placeholder.com/150";
+                              }}
                             />
                             <div>
                               <p className="text-sm font-medium text-gray-900">{product.name}</p>
@@ -166,7 +211,7 @@ const NotificationPage = () => {
                         ))}
                       </div>
 
-                      {order.status.toLowerCase() === 'delivered' && (
+                      {order.orderStatus?.toLowerCase() === 'delivered' && (
                         <button 
                           className="mt-4 flex items-center gap-2 bg-yellow-400 text-white px-4 py-2 rounded-lg hover:bg-yellow-500 transition-all duration-300"
                           onClick={() => navigate('/review')}
