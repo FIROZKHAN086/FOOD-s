@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useFoodContext } from "../Context/Context";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
@@ -11,9 +11,11 @@ const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0 },
 };
-useEffect(() => {
-  window.scrollTo(0, 0);
-}, []);
+
+useEffect(()=>{
+  window.scroll(0,0);
+},[]);
+
 const CheckoutPage = () => {
   const { cart, clearCart, getCartTotal, url } = useFoodContext();
   const auth = getAuth();
