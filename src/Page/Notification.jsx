@@ -7,7 +7,7 @@ import { useFoodContext } from '../Context/Context';
 import { toast } from 'react-hot-toast';
 import { FaCheckCircle, FaTimes, FaSpinner, FaStar, FaHome } from 'react-icons/fa';
 
-const NotificationPage = () => {
+const NotificationPage = ({ setAuth }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -73,7 +73,7 @@ const NotificationPage = () => {
         <h2 className="text-2xl font-bold">Login Required</h2>
         <p className="text-sm text-gray-500 mb-4">Please login to view your notifications</p>
         <button
-          onClick={() => navigate('/login')}
+          onClick={() => setAuth(true)}
           className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
         >
           Login

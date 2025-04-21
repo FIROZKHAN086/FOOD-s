@@ -24,6 +24,7 @@ const ReviewPage = () => {
   const fetchReviews = async () => {
     try {
       const response = await axios.get(`${url}/api/reviews`);
+      // console.log(response.data.data)
       setcomeReviews(response.data.data);
     } catch (error) {
       console.error("Failed to fetch reviews:", error);
