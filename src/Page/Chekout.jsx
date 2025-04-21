@@ -12,11 +12,11 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0 },
 };
 
-useEffect(()=>{
-  window.scroll(0,0);
-},[]);
 
 const CheckoutPage = () => {
+  useEffect(()=>{
+    window.scroll(0,0);
+  },[]);
   const { cart, clearCart, getCartTotal, url } = useFoodContext();
   const auth = getAuth();
   const user = auth.currentUser;
