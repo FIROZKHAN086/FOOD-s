@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { FaHome, FaUtensils, FaClipboardList, FaChartBar, FaCog, FaSignOutAlt, FaBars } from "react-icons/fa";
+import {
+  FaHome,
+  FaUtensils,
+  FaClipboardList,
+  FaChartBar,
+  FaCog,
+  FaSignOutAlt,
+  FaBars,
+} from "react-icons/fa";
 import { getAuth, signOut } from "firebase/auth";
 import { toast } from "react-hot-toast";
 
@@ -32,10 +40,9 @@ const AdminDashboard = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      // Clear user data from localStorage
-      localStorage.removeItem('userId');
-      localStorage.removeItem('userName');
-      localStorage.removeItem('userEmail');
+      localStorage.removeItem("userId");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("userEmail");
       toast.success("Logged out successfully");
       navigate("/");
     } catch (error) {
@@ -49,84 +56,65 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen font-[Poppins] bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white">
       {/* Mobile Header */}
-      <div className="fixed top-0 left-0 right-0 bg-[#0d143d] text-white p-4 flex justify-between items-center z-50 md:hidden">
-        <h2 className="text-xl font-bold">Admin Panel</h2>
-        <button onClick={toggleSidebar} className="text-white hover:bg-white/10 p-2 rounded-lg transition-all">
+      <div className="fixed top-0 left-0 right-0 bg-[#1e1f4a] shadow-lg text-white p-4 flex justify-between items-center z-50 md:hidden">
+        <h2 className="text-xl font-[Orbitron] tracking-wide">Admin Panel</h2>
+        <button
+          onClick={toggleSidebar}
+          className="text-white hover:bg-white/10 p-2 rounded-lg transition-all"
+        >
           <FaBars size={24} />
         </button>
       </div>
 
       {/* Sidebar */}
       <div
-        className={`fixed left-0 top-0 h-full w-64 bg-[#0d143d] text-white transition-transform duration-300 ease-in-out z-50 ${
+        className={`fixed top-0 left-0 h-full w-64 bg-[#1e1f4a] shadow-xl transition-transform duration-300 z-50 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } ${isMobile ? "pt-16" : ""}`}
       >
         <div className="p-6">
-          {!isMobile && <h2 className="text-2xl font-bold mb-8">Admin Panel</h2>}
+          {!isMobile && (
+            <h2 className="text-2xl font-[Orbitron] text-teal-300 mb-8">Admin Panel</h2>
+          )}
           <nav className="space-y-2">
-            <Link
-              to="/admin"
-              className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
-                activeTab === "dashboard" ? "bg-white/20" : "hover:bg-white/10"
-              }`}
-            >
-              <FaHome />
-              Dashboard
-            </Link>
-            <Link
-              to="/admin/foods"
-              className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
-                activeTab === "foods" ? "bg-white/20" : "hover:bg-white/10"
-              }`}
-            >
-              <FaUtensils />
-              Manage Foods
-            </Link>
-            <Link
-              to="/admin/orders"
-              className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
-                activeTab === "orders" ? "bg-white/20" : "hover:bg-white/10"
-              }`}
-            >
-              <FaClipboardList />
-              Manage Orders
-            </Link>
-            <Link
-              to="/admin/analytics"
-              className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
-                activeTab === "analytics" ? "bg-white/20" : "hover:bg-white/10"
-              }`}
-            >
-              <FaChartBar />
-              Analytics
-            </Link>
-            <Link
-              to="/admin/settings"
-              className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
-                activeTab === "settings" ? "bg-white/20" : "hover:bg-white/10"
-              }`}
-            >
-              <FaCog />
-              Settings
-            </Link>
+            {[
+              { to: "/admin", icon: <FaHome />, label: "Dashboard", key: "dashboard" },
+              { to: "/admin/foods", icon: <FaUtensils />, label: "Manage Foods", key: "foods" },
+              { to: "/admin/orders", icon: <FaClipboardList />, label: "Manage Orders", key: "orders" },
+              { to: "/admin/analytics", icon: <FaChartBar />, label: "Analytics", key: "analytics" },
+              { to: "/admin/settings", icon: <FaCog />, label: "Settings", key: "settings" },
+            ].map(({ to, icon, label, key }) => (
+              <Link
+                key={key}
+                to={to}
+                className={`flex items-center gap-3 p-3 rounded-xl transition-all font-medium ${
+                  activeTab === key
+                    ? "bg-gradient-to-r from-purple-600 to-indigo-500 shadow-lg"
+                    : "hover:bg-white/10"
+                }`}
+              >
+                {icon}
+                {label}
+              </Link>
+            ))}
+
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 transition-all text-left"
+              className="w-full flex items-center gap-3 p-3 mt-4 rounded-xl text-left bg-red-600/80 hover:bg-red-700 transition-all shadow-md"
             >
-              <FaSignOutAlt/>
+              <FaSignOutAlt />
               Logout
             </button>
           </nav>
         </div>
       </div>
 
-      {/* Overlay for mobile */}
+      {/* Mobile Overlay */}
       {isMobile && isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="fixed inset-0 bg-black/50 z-40"
           onClick={toggleSidebar}
         />
       )}
