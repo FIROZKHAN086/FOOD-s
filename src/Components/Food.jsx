@@ -74,17 +74,29 @@ const FoodMenu = ({ setItem }) => {
                     <span className="text-xl font-semibold text-rose-300">${item.price}</span>
                   </div>
                   <p className="text-gray-300 text-sm line-clamp-2">{item.description}</p>
-                  <button
-                    onClick={() => addToCart(item)}
-                    disabled={!item.isAvailable}
-                    className={`w-full py-3 rounded-xl font-medium transition-all duration-300 ${
-                      item.isAvailable
-                        ? 'bg-gradient-to-r from-teal-500 to-pink-500 hover:from-teal-600 hover:to-pink-600 text-white'
-                        : 'bg-gray-500 text-gray-300 cursor-not-allowed'
-                    }`}
-                  >
-                    {item.isAvailable ? 'Add to Cart' : 'Out of Stock'}
-                  </button>
+                  <div className="flex flex-col gap-3">
+                            <button
+                              onClick={() => setItem(item._id)}
+                              className="py-2 rounded-xl text-white bg-gradient-to-r from-purple-600 to-pink-500 hover:scale-105 transition-transform duration-300"
+                            >
+                              View Details
+                            </button>
+                            <button
+                              onClick={() => addToCart(item)}
+                              disabled={!item.isAvailable}
+                              className={`py-2 rounded-xl font-semibold transition-all ${
+                                item.isAvailable
+                                  ? 'bg-teal-500 hover:bg-teal-600 text-white'
+                                  : 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                              }`}
+                            >
+                              {cart[item.id] > 0
+                                ? 'Remove from Cart'
+                                : item.isAvailable
+                                ? 'Add to Cart'
+                                : 'Out of Stock'}
+                            </button>
+                          </div>
                 </div>
               </div>
             ))
