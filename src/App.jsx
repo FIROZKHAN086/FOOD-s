@@ -14,7 +14,7 @@ import ManageOrders from './Page/AdminPan/ManageOrders'
 import NotificationPage from './Page/Notification'
 import ReviewPage from './Page/Reviwe'
 import Account from './Page/Account'
-import Contact from './Page/contact'
+import Contact from './Page/Contact'
 const App = () => {
   const [Auth, setAuth] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false);
