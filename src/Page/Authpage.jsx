@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaGoogle, FaTimes } from "react-icons/fa";
+import { FaGoogle, FaTimes, FaSpinner } from "react-icons/fa";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { Toaster, toast } from "react-hot-toast";
@@ -25,9 +25,11 @@ const Authpage = ({ setAuth }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [updatingStatus, setUpdatingStatus] = useState(false); // Track the loading state
 
   const handleGoogleSignup = async () => {
     try {
+      setUpdatingStatus(true); // Start the loading state
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       localStorage.setItem("userId", user.uid);
@@ -40,12 +42,16 @@ const Authpage = ({ setAuth }) => {
       setAuth(false);
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setUpdatingStatus(false); // Reset the loading state
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isAuth && !name.trim()) return toast.error("Name is required for signup.");
+    
+    setUpdatingStatus(true); // Start the loading state
 
     try {
       const userCredential = isAuth
@@ -61,6 +67,8 @@ const Authpage = ({ setAuth }) => {
       setAuth(false);
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setUpdatingStatus(false); // Reset the loading state
     }
   };
 
@@ -119,7 +127,11 @@ const Authpage = ({ setAuth }) => {
             type="submit"
             className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 py-3 rounded-xl text-white font-semibold shadow-md"
           >
-            {isAuth ? "Log In" : "Sign Up"}
+            {updatingStatus ? (
+              <FaSpinner className="animate-spin w-full text-white" />
+            ) : (
+              isAuth ? "Log In" : "Sign Up"
+            )}
           </motion.button>
         </form>
 

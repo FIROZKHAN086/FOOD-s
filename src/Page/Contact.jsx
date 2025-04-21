@@ -61,7 +61,9 @@ const Contact = () => {
             ></textarea>
             <button
               type="submit"
-              href="mailto:firozkhan192006@gmail"
+              onClick={() => {
+                window.location.href = 'mailto:firozkhan192006@gmail.com';
+              }}
               className="w-full bg-gradient-to-r from-pink-500 to-orange-400 text-white py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-orange-500 transition-all duration-300"
             >
               Send Message ✉️
