@@ -12,7 +12,7 @@ export default defineConfig({
       includeAssets: [
         'favicon.ico',
         'robots.txt',
-        'apple-touch-icon.png'
+        './apple-icon-114x114/png'
       ],
       manifest: {
         name: 'Kings Food',
@@ -21,7 +21,7 @@ export default defineConfig({
         start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
-        theme_color: '#16a34a',
+        theme_color: '#ffff',
         icons: [
           {
             src: './icons/android-icon-192x192.png',

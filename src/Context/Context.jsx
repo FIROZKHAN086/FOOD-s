@@ -38,6 +38,7 @@ const initialState = {
   loading: true,
   error: null,
   cart: [],
+  notification:"All"
 };
 
 const foodReducer = (state, action) => {
@@ -90,6 +91,8 @@ export const FoodProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         const res = await api.get("/api/foods");
+        // console.log(res);
+        
     
         if (isMounted) {
           if (res.data && Array.isArray(res.data)) {

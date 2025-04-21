@@ -13,16 +13,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Add to your global styles (e.g. App.css) */
 .custom-scroll::-webkit-scrollbar {
-    height: 10px;
+    height: 8px;
   }
   .custom-scroll::-webkit-scrollbar-thumb {
-    background: linear-gradient(to right, #38bdf8, #a78bfa);
+    background: #ccc;
     border-radius: 10px;
   }
   .custom-scroll::-webkit-scrollbar-track {
     background: transparent;
   }
+
+  /* Custom scrollbar for horizontal Swiper if needed */
+.food-swiper-mobile::-webkit-scrollbar {
+    height: 6px;
+  }
+  .food-swiper-mobile::-webkit-scrollbar-thumb {
+    background-color: #c084fc;
+    border-radius: 20px;
+  }
+  .food-swiper-mobile::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  
 
 /* Font Classes */
 .font-poppins {
@@ -64,3 +79,20 @@
 .font-ubuntu {
     font-family: 'Ubuntu', sans-serif;
 }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  

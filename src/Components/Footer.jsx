@@ -1,188 +1,112 @@
 import React from 'react';
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaMapMarkerAlt, FaPhone, FaEnvelope, FaUtensils } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';  // Importing Framer Motion for animations
+import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaMapMarkerAlt, FaPhoneAlt, FaEnvelopeOpenText } from 'react-icons/fa';
+import { GiForkKnifeSpoon, GiHotMeal, GiChefToque } from 'react-icons/gi';
+import { motion } from 'framer-motion';
 
 const Footer = () => {
   return (
-    <footer className="relative font-poppins bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-pink-500 rounded-full blur-3xl"></div>
-      </div>
+    <footer className="bg-[#fff9f0] text-[#2e2e2e] font-poppins relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-72 h-72 bg-orange-100 rounded-full blur-3xl opacity-20 transform translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute bottom-0 left-0 w-72 h-72 bg-green-100 rounded-full blur-3xl opacity-20 transform -translate-x-1/2 translate-y-1/2"></div>
 
-      <div className="relative max-w-7xl mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          
-          {/* Brand Section */}
-          <motion.div 
-            className="space-y-6"
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, type: 'spring', stiffness: 100 }}
-          >
-            <div className="flex items-center space-x-2">
-              <FaUtensils className="text-3xl text-pink-400" />
-              <h3 className="text-3xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-                FoodieHub
-              </h3>
-            </div>
-            <p className="text-gray-300 leading-relaxed">
-              Experience culinary excellence with our handcrafted dishes, bringing global flavors right to your table.
-            </p>
-          </motion.div>
-
-          {/* Quick Links */}
-          <motion.div 
-            className="transform hover:translate-x-2 transition-transform duration-300"
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-          >
-            <h4 className="text-white font-bold text-xl mb-6 flex items-center space-x-2">
-              <span className="w-8 h-[2px] bg-gradient-to-r from-pink-400 to-purple-400"></span>
-              <span>Quick Links</span>
-            </h4>
-            <ul className="space-y-4 text-gray-300">
-              <motion.li 
-                whileHover={{ scale: 1.1, color: "#f9a8d4" }}
-                className="transition-all duration-200"
-              >
-                <Link to="/" className="flex items-center space-x-2">
-                  <span>→</span>
-                  <span>Our Menu</span>
-                </Link>
-              </motion.li>
-              <motion.li 
-                whileHover={{ scale: 1.1, color: "#f9a8d4" }}
-                className="transition-all duration-200"
-              >
-                <Link to="/" className="flex items-center space-x-2">
-                  <span>→</span>
-                  <span>About Us</span>
-                </Link>
-              </motion.li>
-              <motion.li 
-                whileHover={{ scale: 1.1, color: "#f9a8d4" }}
-                className="transition-all duration-200"
-              >
-                <Link to="/" className="flex items-center space-x-2">
-                  <span>→</span>
-                  <span>Contact</span>
-                </Link>
-              </motion.li>
-              <motion.li 
-                whileHover={{ scale: 1.1, color: "#f9a8d4" }}
-                className="transition-all duration-200"
-              >
-                <Link to="/" className="flex items-center space-x-2">
-                  <span>→</span>
-                  <span>Careers</span>
-                </Link>
-              </motion.li>
-            </ul>
-          </motion.div>
-
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-          >
-            <h4 className="text-white font-bold text-xl mb-6 flex items-center space-x-2">
-              <span className="w-8 h-[2px] bg-gradient-to-r from-pink-400 to-purple-400"></span>
-              <span>Contact Us</span>
-            </h4>
-            <ul className="space-y-4 text-gray-300">
-              <li className="flex items-center space-x-3">
-                <FaMapMarkerAlt className="text-pink-400" />
-                <span>123 Food Street, Cuisine City</span>
-              </li>
-              <li className="flex items-center space-x-3">
-                <FaPhone className="text-pink-400" />
-                <span>(555) 123-4567</span>
-              </li>
-              <li className="flex items-center space-x-3">
-                <FaEnvelope className="text-pink-400" />
-                <span>Firozkhan192006@gmail.com</span>
-              </li>
-            </ul>
-          </motion.div>
-
-          {/* Newsletter */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-          >
-            <h4 className="text-white font-bold text-xl mb-6 flex items-center space-x-2">
-              <span className="w-8 h-[2px] bg-gradient-to-r from-pink-400 to-purple-400"></span>
-              <span>Newsletter</span>
-            </h4>
-            <div className="space-y-4">
-              <p className="text-gray-300">Stay updated with our latest offers and dishes!</p>
-              <div className="flex flex-col space-y-3">
-                <input 
-                  type="email" 
-                  placeholder="Enter your email"
-                  className="bg-white/10 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder-gray-400"
-                />
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-lg hover:from-pink-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-pink-500/25"
-                >
-                  Subscribe Now
-                </motion.button>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Bottom Bar */}
+      <div className="max-w-7xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
+        
+        {/* Brand */}
         <motion.div
-          className="border-t border-white/10 mt-16 pt-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.8 }}
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
         >
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-gray-300 text-sm">
-              © 2024 FoodieHub. All rights reserved.
-            </p>
-            <div className="flex space-x-6">
-              <motion.a
-                whileHover={{ scale: 1.1 }}
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-400 transition-colors duration-300"
-                href="https://facebook.com"
-              >
-                <FaFacebookF className="text-white" />
-              </motion.a>
-              <motion.a
-                whileHover={{ scale: 1.1 }}
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-400 transition-colors duration-300"
-                href="https://twitter.com"
-              >
-                <FaTwitter className="text-white" />
-              </motion.a>
-              <motion.a
-                whileHover={{ scale: 1.1 }}
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-400 transition-colors duration-300"
-                href="https://www.instagram.com/khan____0086/"
-                target="_blank"
-              >
-                <FaInstagram className="text-white" />
-              </motion.a>
-              <motion.a
-                whileHover={{ scale: 1.1 }}
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-pink-400 transition-colors duration-300"
-                href="https://linkedin.com"
-              >
-                <FaLinkedinIn className="text-white" />
-              </motion.a>
-            </div>
+          <div className="flex items-center space-x-2 mb-4">
+            <GiHotMeal className="text-4xl text-orange-500" />
+            <h3 className="text-3xl font-bold text-green-700">FoodieHub</h3>
+          </div>
+          <p className="text-gray-600 leading-relaxed">
+            Delivering fresh, delicious meals right to your doorstep. Taste the love in every bite 🍴
+          </p>
+        </motion.div>
+
+        {/* Links */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+        >
+          <h4 className="text-lg font-semibold text-green-700 mb-4 flex items-center gap-2">
+            <GiForkKnifeSpoon /> Quick Links
+          </h4>
+          <ul className="space-y-3 text-gray-700">
+            {["Home", "Menu", "Offers", "Contact", "Blog"].map((item, index) => (
+              <li key={index}>
+                <Link to="/" className="hover:text-orange-500 transition-colors duration-200">
+                  → {item}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+
+        {/* Contact */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+        >
+          <h4 className="text-lg font-semibold text-green-700 mb-4 flex items-center gap-2">
+            <GiChefToque /> Contact Us
+          </h4>
+          <ul className="space-y-3 text-gray-700">
+            <li className="flex items-center gap-3">
+              <FaMapMarkerAlt className="text-orange-400" />
+              99 Gourmet Ave, Foodville
+            </li>
+            <li className="flex items-center gap-3">
+              <FaPhoneAlt className="text-orange-400" />
+              +1 (800) 123-FOOD
+            </li>
+            <li className="flex items-center gap-3">
+              <FaEnvelopeOpenText className="text-orange-400" />
+              firozkhan@gmail.com
+            </li>
+          </ul>
+        </motion.div>
+
+        {/* Newsletter */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.6 }}
+        >
+          <h4 className="text-lg font-semibold text-green-700 mb-4">🍽️ Join Our Newsletter</h4>
+          <p className="text-gray-600 mb-3">Get weekly food tips and hot offers delivered to your inbox!</p>
+          <div className="flex flex-col space-y-3">
+            <input
+              type="email"
+              placeholder="Your email"
+              className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            />
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-all duration-300"
+            >
+              Subscribe
+            </motion.button>
           </div>
         </motion.div>
+      </div>
+
+      {/* Bottom */}
+      <div className="border-t mx-2  border-gray-200 py-6 mt-8 text-sm text-gray-500 relative z-10">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <p>© 2025 FoodieHub. All rights reserved.</p>
+          <div className="flex gap-4">
+            <a href="https://facebook.com" className="hover:text-blue-600"><FaFacebookF /></a>
+            <a href="https://twitter.com" className="hover:text-sky-500"><FaTwitter /></a>
+            <a href="https://instagram.com" className="hover:text-pink-500"><FaInstagram /></a>
+            <a href="https://linkedin.com" className="hover:text-blue-800"><FaLinkedinIn /></a>
+          </div>
+        </div>
       </div>
     </footer>
   );

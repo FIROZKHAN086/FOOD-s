@@ -73,7 +73,7 @@ const Cart = () => {
                           +
                         </button>
                       </div>
-                      <p className="text-xl font-bold text-gray-800">₹{item.price}</p>
+                      <p className="text-xl font-bold text-gray-800">${item.price}</p>
                     </div>
                   </div>
                 </div>
@@ -87,7 +87,7 @@ const Cart = () => {
                 <div className="space-y-4 text-gray-600">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>₹{cart.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</span>
+                    <span>${cart.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Delivery Fee</span>
@@ -97,7 +97,7 @@ const Cart = () => {
                     <div className="flex justify-between text-lg font-semibold text-gray-800">
                       <span>Total</span>
                       <span>
-                        ₹{(cart.reduce((acc, item) => acc + item.price * item.quantity, 0) + 30).toFixed(2)}
+                        ${(cart.reduce((acc, item) => acc + item.price * item.quantity, 0) + 30).toFixed(2)}
                       </span>
                     </div>
                   </div>

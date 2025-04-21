@@ -3,7 +3,7 @@ import axios from "axios";
 import { getAuth } from "firebase/auth";
 import { useFoodContext } from "../Context/Context";
 import { format } from "date-fns";
-import { FaSpinner } from "react-icons/fa";
+import { FaSpinner, FaUtensils } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -83,13 +83,13 @@ const MyOrders = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center text-gray-800 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-yellow-300 to-orange-500 flex items-center justify-center text-gray-800 px-4">
         <div className="text-center space-y-4">
-          <h2 className="text-2xl font-bold">Please login to view your orders</h2>
-          <p className="text-gray-500">You need to be logged in to see your order history.</p>
+          <h2 className="text-2xl font-semibold text-white">Please login to view your orders</h2>
+          <p className="text-gray-100">You need to be logged in to see your order history.</p>
           <button 
             onClick={() => navigate('/login')}
-            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
           >
             Login
           </button>
@@ -118,9 +118,9 @@ const MyOrders = () => {
   }
 
   return (
-    <div className="min-h-screen mt-20 bg-gray-100 py-10 px-4">
+    <div className="min-h-screen mt-20 bg-gradient-to-r from-pink-100 to-yellow-200 py-10 px-4">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">My Orders</h2>
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">My Orders <FaUtensils className="inline-block text-2xl text-yellow-600" /></h2>
 
         {orders.length === 0 ? (
           <div className="bg-white border border-gray-200 rounded-xl p-8 shadow text-center">
@@ -146,9 +146,7 @@ const MyOrders = () => {
                     </p>
                   </div>
                   <span
-                    className={`px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(
-                      order.orderStatus
-                    )}`}
+                    className={`px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(order.orderStatus)}`}
                   >
                     {order.orderStatus || "N/A"}
                   </span>

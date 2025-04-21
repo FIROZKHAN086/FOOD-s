@@ -115,70 +115,71 @@ const FoodMenu = () => {
                 </div>
 
                 {/* Mobile View */}
-                <div className="md:hidden">
-                    {categories.map((category) => (
-                        <div key={category} className="mb-12">
-                            <h2 className="text-3xl font-bold md:z-10 z-40 text-white mb-6 capitalize">{category}</h2>
-                            <Swiper
-                                modules={[Navigation, Pagination, Autoplay]}
-                                pagination={{ clickable: true }}
-                                Navigation={true}
-                                spaceBetween={20}
-                                slidesPerView={1}
-                                className="food-swiper-mobile"
-                            >
-                                {filteredItems
-                                    .filter(item => item.category.toLowerCase() === category.toLowerCase())
-                                    .map((item) => (
-                                        <SwiperSlide key={item.id}>
-                                            <div className="group relative bg-white/5 backdrop-blur-sm rounded-3xl overflow-hidden 
-                                            
-                                                        hover:bg-white/10 transition-all duration-500 transform hover:-translate-y-2
-                                                        hover:shadow-2xl hover:shadow-purple-500/20">
-                                                <div className="aspect-w-16 aspect-h-9">
-                                                    <img
-                                                        src={item.image}
-                                                        alt={item.name}
-                                                        className="w-full h-[300px] object-cover transform group-hover:scale-110 transition-transform duration-700"
-                                                    />
-                                                </div>
+                <div className="md:hidden px-4 pt-10 pb-20 bg-gradient-to-b from-[#fdf4ff] via-white to-[#f0f9ff]">
+      {categories.map((category) => (
+        <div key={category} className="mb-14">
+          <h2 className="text-3xl font-bold text-center text-purple-700 mb-8 capitalize">
+            {category}
+          </h2>
 
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 
-                                                            group-hover:opacity-100 transition-opacity duration-300"/>
+          <Swiper
+            modules={[Navigation, Pagination, Autoplay]}
+            autoplay={{ delay: 5000, disableOnInteraction: false }}
+            pagination={{ clickable: true }}
+            spaceBetween={24}
+            slidesPerView={1}
+            loop={true}
+            className="rounded-3xl"
+          >
+            {filteredItems
+              .filter(item => item.category.toLowerCase() === category.toLowerCase())
+              .map((item) => (
+                <SwiperSlide key={item.id}>
+                  <div className="relative group bg-white/20 backdrop-blur-2xl border border-white/30 rounded-3xl overflow-hidden shadow-2xl hover:shadow-purple-300 transition-all duration-500">
+                    <div className="h-[260px] sm:h-[300px] overflow-hidden">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                    </div>
 
-                                                <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-6 
-                                                            group-hover:translate-y-0 transition-transform duration-300">
-                                                    <div className="flex justify-between items-center mb-3">
-                                                        <h2 className="text-2xl font-bold text-white group-hover:text-purple-400">{item.name}</h2>
-                                                        <span className="text-xl font-bold text-purple-400">${item.price}</span>
-                                                    </div>
-                                                    <p className="text-gray-300 text-sm mb-4">{item.description}</p>
-                                                    <button 
-                                                         onClick={() => addToCart(item)}
-                                                        className={`w-full py-3 rounded-xl font-medium transition-all duration-300
-                                                                ${item.isAvailable 
-                                                                    ? cart[item.id] > 0
-                                                                        ? 'bg-red-600 text-white hover:bg-red-700'
-                                                                        : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600'
-                                                                    : 'bg-gray-600 text-gray-300 cursor-not-allowed'}`}
-                                                        disabled={!item.isAvailable}
-                                                    >
-                                                        {cart[item.id] > 0 ? 'Remove from Cart' : (item.isAvailable ? 'Add to Cart' : 'Out of Stock')}
-                                                    </button>
-                                                </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
 
-                                                {!item.isAvailable && (
-                                                    <div className="absolute top-4 right-4 bg-red-500/90 text-white px-4 py-2 rounded-full">
-                                                        Out of Stock
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </SwiperSlide>
-                                    ))}
-                            </Swiper>
-                        </div>
-                    ))}
-                </div>
+                    <div className="absolute bottom-0 left-0 right-0 z-20 p-5 transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
+                      <div className="flex justify-between items-center mb-3">
+                        <h2 className="text-xl font-bold text-white">{item.name}</h2>
+                        <span className="text-lg font-semibold text-yellow-400">${item.price}</span>
+                      </div>
+                      <p className="text-gray-200 text-sm mb-4">{item.description}</p>
+
+                      <button
+                        onClick={() => addToCart(item)}
+                        className={`w-full py-3 text-sm font-semibold rounded-xl transition-all duration-300
+                          ${item.isAvailable
+                            ? cart[item.id] > 0
+                              ? "bg-red-500 hover:bg-red-600 text-white"
+                              : "bg-gradient-to-r from-purple-600 to-pink-500 text-white hover:from-purple-700 hover:to-pink-600"
+                            : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                          }`}
+                        disabled={!item.isAvailable}
+                      >
+                        {cart[item.id] > 0 ? "Remove from Cart" : item.isAvailable ? "Add to Cart" : "Out of Stock"}
+                      </button>
+                    </div>
+
+                    {!item.isAvailable && (
+                      <div className="absolute top-4 right-4 bg-red-600 text-white px-4 py-1 rounded-full text-xs shadow-md z-30">
+                        Out of Stock
+                      </div>
+                    )}
+                  </div>
+                </SwiperSlide>
+              ))}
+          </Swiper>
+        </div>
+      ))}
+    </div>
             </div>
         </div>
     );
