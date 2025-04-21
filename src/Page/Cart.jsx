@@ -91,13 +91,13 @@ const Cart = () => {
                   </div>
                   <div className="flex justify-between">
                     <span>Delivery Fee</span>
-                    <span>₹30.00</span>
+                    <span>$3.00</span>
                   </div>
                   <div className="border-t pt-4 mt-4">
                     <div className="flex justify-between text-lg font-semibold text-gray-800">
                       <span>Total</span>
                       <span>
-                        ${(cart.reduce((acc, item) => acc + item.price * item.quantity, 0) + 30).toFixed(2)}
+                        ${(cart.reduce((acc, item) => acc + item.price * item.quantity, 0) + 3).toFixed(2)}
                       </span>
                     </div>
                   </div>

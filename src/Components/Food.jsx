@@ -1,188 +1,173 @@
 import { useFoodContext } from '../Context/Context';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { EffectCoverflow, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { useEffect } from 'react';
 
-const FoodMenu = () => {
-    const { 
-        filteredItems, 
-        setComeCategory, 
-        loading, 
-        error, 
-        addToCart, 
-        removeFromCart,
-        cart 
-    } = useFoodContext();
-    
-    const categories = ['pizza', 'burger', 'sushi', 'thali'];
+const FoodMenu = ({ setItem }) => {
+  const {
+    filteredItems,
+    setComeCategory,
+    loading,
+    error,
+    addToCart,
+    removeFromCart,
+    cart,
+  } = useFoodContext();
 
-   
+  const categories = ['pizza', 'burger', 'sushi', 'thali'];
 
-    // const handleCartAction = (item) => {
-    //     if (isInCart(item.id)) {
-    //         removeFromCart(item.id);
-    //     } else {
-    //         addToCart(item);
-    //     }
-    // };
-
-    if (loading) {
-        return (
-            <div className="min-h-screen z-40 bg-gradient-to-br from-slate-900 to-slate-800 py-8 flex items-center justify-center">
-                <div className="animate-spin w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full"></div>
-                <div className="ml-4 text-white text-2xl font-medium animate-pulse">Loading<span className="animate-bounce">.</span><span className="animate-bounce delay-100">.</span><span className="animate-bounce delay-200">.</span></div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="min-h-screen z-40 bg-gradient-to-br from-slate-900 to-slate-800 py-8 flex items-center justify-center">
-                <div className="text-red-500 text-2xl">Error: {error}</div>
-            </div>
-        );
-    }
-
+  if (loading) {
     return (
-        <div className="min-h-screen font-lato  relative bg-gradient-to-br from-slate-900 to-slate-800 py-8">
-            <div className="max-w-[2000px] mx-auto px-4">
-                <h1 className="text-6xl font-bold text-center mb-10 text-white">
-                    Our Food Menu
-                </h1>
-
-                <div className="flex justify-center gap-4 mb-12">
-                    <button 
-                        onClick={() => setComeCategory("All")}
-                        className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 
-                                rounded-xl hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 
-                                transition-all duration-300 shadow-lg hover:shadow-pink-500/25"
-                    >
-                        All Menu
-                    </button>
-                </div>
-
-                {/* Desktop View */}
-                <div className="hidden md:grid grid-cols-3 gap-8 mb-12">
-                    {filteredItems.length > 0 ? filteredItems.map((item) => (
-                        <div
-                            key={item.id}
-                            className="group relative bg-white/5 backdrop-blur-sm rounded-3xl overflow-hidden 
-                                    hover:bg-white/10 transition-all duration-500 transform hover:-translate-y-2
-                                    hover:shadow-2xl hover:shadow-purple-500/20"
-                        >
-                            <div className="aspect-w-16 aspect-h-9">
-                                <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    className="w-full h-[300px] object-cover transform group-hover:scale-110 transition-transform duration-700"
-                                />
-                            </div>
-
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 
-                                        group-hover:opacity-100 transition-opacity duration-300"/>
-
-                            <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-6 
-                                        group-hover:translate-y-0 transition-transform duration-300">
-                                <div className="flex justify-between items-center mb-3">
-                                    <h2 className="text-2xl font-bold text-white group-hover:text-purple-400">{item.name}</h2>
-                                    <span className="text-xl font-bold text-[#e2e4db]">${item.price}</span>
-                                </div>
-                                <p className="text-gray-300 text-sm mb-4">{item.description}</p>
-                                <button 
-                                    onClick={() => addToCart(item)}
-                                                
-                                    
-                                    className={`w-full py-3 rounded-xl font-medium transition-all duration-300
-                                            ${item.isAvailable ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600' : 'bg-gray-600 text-gray-300 cursor-not-allowed'}`}
-                                >
-                                        {item.isAvailable ? 'Add to Cart' : 'Out of Stock'}
-                                </button>
-                            </div>
-
-                            {!item.isAvailable && (
-                                <div className="absolute top-4 right-4 bg-red-500/90 text-white px-4 py-2 rounded-full">
-                                    Out of Stock
-                                </div>
-                            )}
-                        </div>
-                    )) : (
-                        <div className="col-span-3 text-center text-white text-xl">
-                            No items available in this category.
-                        </div>
-                    )}
-                </div>
-
-                {/* Mobile View */}
-                <div className="md:hidden px-4 pt-10 pb-20 bg-gradient-to-b from-[#fdf4ff] via-white to-[#f0f9ff]">
-      {categories.map((category) => (
-        <div key={category} className="mb-14">
-          <h2 className="text-3xl font-bold text-center text-purple-700 mb-8 capitalize">
-            {category}
-          </h2>
-
-          <Swiper
-            modules={[Navigation, Pagination, Autoplay]}
-            
-            pagination={{ clickable: true }}
-            spaceBetween={24}
-            slidesPerView={1}
-            loop={true}
-            className="rounded-3xl"
-          >
-            {filteredItems
-              .filter(item => item.category.toLowerCase() === category.toLowerCase())
-              .map((item) => (
-                <SwiperSlide key={item.id}>
-                  <div className="relative group bg-white/20 backdrop-blur-2xl border border-white/30 rounded-3xl overflow-hidden shadow-2xl hover:shadow-purple-300 transition-all duration-500">
-                    <div className="h-[260px] sm:h-[300px] overflow-hidden">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                    </div>
-
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-
-                    <div className="absolute bottom-0 left-0 right-0 z-20 p-5 transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
-                      <div className="flex justify-between items-center mb-3">
-                        <h2 className="text-xl font-bold text-white">{item.name}</h2>
-                        <span className="text-lg font-semibold text-yellow-400">${item.price}</span>
-                      </div>
-                      <p className="text-gray-200 text-sm mb-4">{item.description}</p>
-
-                      <button
-                        onClick={() => addToCart(item)}
-                        className={`w-full py-3 text-sm font-semibold rounded-xl transition-all duration-300
-                          ${item.isAvailable
-                            ? cart[item.id] > 0
-                              ? "bg-red-500 hover:bg-red-600 text-white"
-                              : "bg-gradient-to-r from-purple-600 to-pink-500 text-white hover:from-purple-700 hover:to-pink-600"
-                            : "bg-gray-400 text-gray-200 cursor-not-allowed"
-                          }`}
-                        disabled={!item.isAvailable}
-                      >
-                        {cart[item.id] > 0 ? "Remove from Cart" : item.isAvailable ? "Add to Cart" : "Out of Stock"}
-                      </button>
-                    </div>
-
-                    {!item.isAvailable && (
-                      <div className="absolute top-4 right-4 bg-red-600 text-white px-4 py-1 rounded-full text-xs shadow-md z-30">
-                        Out of Stock
-                      </div>
-                    )}
-                  </div>
-                </SwiperSlide>
-              ))}
-          </Swiper>
-        </div>
-      ))}
-    </div>
-            </div>
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-sky-900 via-purple-900 to-indigo-900 flex items-center justify-center">
+        <div className="animate-spin w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full"></div>
+        <p className="ml-4 text-white text-xl font-poppins animate-pulse">Loading...</p>
+      </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-sky-900 via-purple-900 to-indigo-900 flex items-center justify-center">
+        <p className="text-red-500 text-xl font-poppins">Error: {error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white py-12 font-poppins">
+      <div className="max-w-[1600px] mx-auto px-4">
+        <h1 className="text-4xl md:text-6xl font-bold text-center text-teal-300 mb-12 font-pacifico">
+          Explore Our Menu
+        </h1>
+
+        <div className="flex flex-wrap justify-center gap-4 mb-10">
+          {['All', ...categories].map((cat, idx) => (
+            <button
+              key={idx}
+              onClick={() => setComeCategory(cat)}
+              className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold shadow-lg hover:shadow-pink-300/30 transition-transform hover:scale-105"
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Desktop Cards */}
+        <div className="hidden md:grid grid-cols-3 gap-8">
+          {filteredItems.length > 0 ? (
+            filteredItems.map((item) => (
+              <div
+                key={item.id}
+                className="bg-white/10 border border-white/10 backdrop-blur-xl rounded-3xl shadow-xl overflow-hidden hover:shadow-purple-400 transition-all duration-500 group"
+              >
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-[280px] object-cover transform group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="p-6 space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-2xl font-bold text-white">{item.name}</h2>
+                    <span className="text-xl font-semibold text-rose-300">${item.price}</span>
+                  </div>
+                  <p className="text-gray-300 text-sm line-clamp-2">{item.description}</p>
+                  <button
+                    onClick={() => addToCart(item)}
+                    disabled={!item.isAvailable}
+                    className={`w-full py-3 rounded-xl font-medium transition-all duration-300 ${
+                      item.isAvailable
+                        ? 'bg-gradient-to-r from-teal-500 to-pink-500 hover:from-teal-600 hover:to-pink-600 text-white'
+                        : 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                    }`}
+                  >
+                    {item.isAvailable ? 'Add to Cart' : 'Out of Stock'}
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="col-span-3 text-center text-gray-200">No items found.</div>
+          )}
+        </div>
+
+        {/* Mobile Swiper */}
+        <div className="md:hidden mt-16">
+          {categories.map((category) => (
+            <div key={category} className="mb-20">
+              <h2 className="text-3xl font-bold text-center text-purple-300 mb-6 capitalize font-pacifico">
+                {category}
+              </h2>
+              <Swiper
+                modules={[EffectCoverflow, Pagination, Autoplay]}
+                effect="coverflow"
+                grabCursor
+                centeredSlides
+                slidesPerView="auto"
+                loop
+                autoplay={{ delay: 7000 }}
+                pagination={{ clickable: true }}
+                coverflowEffect={{
+                  rotate: 30,
+                  stretch: 0,
+                  depth: 100,
+                  modifier: 2.5,
+                  slideShadows: true,
+                }}
+                className="mySwiper"
+              >
+                {filteredItems
+                  .filter((item) => item.category.toLowerCase() === category.toLowerCase())
+                  .map((item) => (
+                    <SwiperSlide key={item.id} className="w-[80%] max-w-sm">
+                      <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-xl overflow-hidden">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="h-[250px] w-full object-cover"
+                        />
+                        <div className="p-5 space-y-3">
+                          <div className="flex justify-between items-center">
+                            <h3 className="text-xl font-semibold text-white">{item.name}</h3>
+                            <span className="text-pink-400 font-bold">${item.price}</span>
+                          </div>
+                          <p className="text-gray-300 text-sm line-clamp-3">{item.description}</p>
+                          <div className="flex flex-col gap-3">
+                            <button
+                              onClick={() => setItem(item._id)}
+                              className="py-2 rounded-xl text-white bg-gradient-to-r from-purple-600 to-pink-500 hover:scale-105 transition-transform duration-300"
+                            >
+                              View Details
+                            </button>
+                            <button
+                              onClick={() => addToCart(item)}
+                              disabled={!item.isAvailable}
+                              className={`py-2 rounded-xl font-semibold transition-all ${
+                                item.isAvailable
+                                  ? 'bg-teal-500 hover:bg-teal-600 text-white'
+                                  : 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                              }`}
+                            >
+                              {cart[item.id] > 0
+                                ? 'Remove from Cart'
+                                : item.isAvailable
+                                ? 'Add to Cart'
+                                : 'Out of Stock'}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </SwiperSlide>
+                  ))}
+              </Swiper>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default FoodMenu;

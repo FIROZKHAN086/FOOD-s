@@ -15,9 +15,11 @@ import NotificationPage from './Page/Notification'
 import ReviewPage from './Page/Reviwe'
 import Account from './Page/Account'
 import Contact from './Page/Contact'
+import ItemDetails from './Pages/Itemdetails'
 const App = () => {
   const [Auth, setAuth] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false);
+  const [item, setItem] = useState(null);
   
 
   useEffect(()=>{
@@ -33,13 +35,15 @@ const App = () => {
 
       <Navbar setAuth={setAuth} IsAdmin={isAdmin} />
       {Auth ? <Authpage setAuth={setAuth} /> : <></>}
+
+     
       
       <Toaster
   position="top-left"
   reverseOrder={true}
 />
       <Routes>
-        <Route path='/' element={<Home />} />
+        <Route path='/' element={<Home setItem={setItem} />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/checkout' element={<Chekout />} />
         <Route path='/myorders' element={<MyOrders />} />
@@ -47,7 +51,9 @@ const App = () => {
         <Route path='/review' element={<ReviewPage />} />
         <Route path='/account' element={<Account />} />
         <Route path='/contact' element={<Contact/>} />
+      
         
+
         {isAdmin && (
           <>
             <Route path='/admin' element={<AdminDashboard />} />
