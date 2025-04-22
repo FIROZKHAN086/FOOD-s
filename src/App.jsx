@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom'
 import { Home } from './Page/Home'
 import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
-import AboutPage from './Components/AboutPage'
 import Cart from './Page/Cart'
 import Authpage from './Page/Authpage'
 import { Toaster } from 'react-hot-toast'
@@ -16,7 +15,7 @@ import NotificationPage from './Page/Notification'
 import ReviewPage from './Page/Reviwe'
 import Account from './Page/Account'
 import Contact from './Page/Contact'
-import ItemDetails from './Pages/Itemdetails'
+import AboutPage from './Components/AboutPage'
 const App = () => {
   const [Auth, setAuth] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false);
@@ -52,7 +51,8 @@ const App = () => {
         <Route path='/review' element={<ReviewPage />} />
         <Route path='/account' element={<Account />} />
         <Route path='/contact' element={<Contact/>} />
-        <Route path ='/about' element={<AboutPage/>} />
+        <Route path='/about' element={<AboutPage/>}/>
+        
       
         
 
