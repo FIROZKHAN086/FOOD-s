@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const AboutPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 text-gray-800 p-8">
+    <div className="min-h-screen my-10 bg-gradient-to-b from-blue-50 to-blue-100 text-gray-800 p-8">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
