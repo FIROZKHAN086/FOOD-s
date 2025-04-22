@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import { Home } from './Page/Home'
 import Navbar from './Components/Navbar'
 import Footer from './Components/Footer'
+import AboutPage from './Components/AboutPage'
 import Cart from './Page/Cart'
 import Authpage from './Page/Authpage'
 import { Toaster } from 'react-hot-toast'
@@ -51,6 +52,7 @@ const App = () => {
         <Route path='/review' element={<ReviewPage />} />
         <Route path='/account' element={<Account />} />
         <Route path='/contact' element={<Contact/>} />
+        <Route path ='/about' element={<AboutPage/>} />
       
         
 
