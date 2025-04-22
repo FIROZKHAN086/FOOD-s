@@ -103,6 +103,7 @@ const Navbar = ({ setAuth, IsAdmin }) => {
           <div className="relative">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              onMouseEnter={()=>setIsDropdownOpen(!isDropdownOpen)}
               className="bg-white text-black px-3 py-1 rounded-full flex items-center gap-2 hover:shadow-lg transition"
             >
               <FaUser />

@@ -62,7 +62,7 @@ const MyOrders = () => {
     if (user) {
       fetchOrders();
     }
-  }, [user, url]);
+  }, [user, url ,orders]);
 
   const getStatusColor = (status) => {
     if (!status) return "bg-gray-300 text-gray-800";

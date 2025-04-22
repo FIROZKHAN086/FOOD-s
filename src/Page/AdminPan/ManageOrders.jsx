@@ -27,6 +27,12 @@ const ManageOrders = () => {
     fetchOrders();
   }, [selectedStatus, selectedPaymentStatus]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+
+  }, [])
+  
+
   const fetchOrders = async () => {
     try {
       setLoading(true);

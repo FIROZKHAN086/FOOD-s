@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const AboutPage = () => {
+
+  useEffect(()=>{
+    window.scroll(0,0)
+  },[])
+
   return (
     <div className="min-h-screen my-10 bg-gradient-to-b from-blue-50 to-blue-100 text-gray-800 p-8">
       <motion.div

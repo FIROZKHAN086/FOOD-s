@@ -37,10 +37,10 @@ const Footer = () => {
             <GiForkKnifeSpoon /> Quick Links
           </h4>
           <ul className="space-y-3 text-gray-700">
-            {["Home", "Menu", "Offers", "Contact", "Blog"].map((item, index) => (
+            {[{titel:"Home",link:'/'}, {titel:"Menu",link:'/menu'},{titel:"Contact",link:'/contact'},{titel:"About",link:'/about'},{titel:"Blog",link:'/'},].map((item, index) => (
               <li key={index}>
-                <Link to="/" className="hover:text-orange-500 transition-colors duration-200">
-                  → {item}
+                <Link to={item.link} className="hover:text-orange-500 transition-colors duration-200">
+                  → {item.titel}
                 </Link>
               </li>
             ))}
@@ -67,7 +67,7 @@ const Footer = () => {
             </li>
             <li className="flex items-center gap-3">
               <FaEnvelopeOpenText className="text-orange-400" />
-              firozkhan@gmail.com
+              firozkhan192006@gmail.com
             </li>
           </ul>
         </motion.div>
@@ -88,6 +88,7 @@ const Footer = () => {
             />
             <motion.button
               whileHover={{ scale: 1.05 }}
+              onClick={() => window.location.href = `mailto:firozkhan192006@gmail.com ${encodeURIComponent('Subject: FoodieHub Newsletter')}`}
               className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition-all duration-300"
             >
               Subscribe
