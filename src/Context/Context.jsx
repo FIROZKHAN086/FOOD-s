@@ -2,23 +2,20 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
-// ✅ Directly set production URL for deployment
-const url = "https://food-apps-653q.onrender.com" || "http://localhost:3000";
+const url = "https://food-apps-653q.onrender.com"; // our deployed API
 
-// Create axios instance
 const api = axios.create({
   baseURL: url,
-  timeout: 20000, // ⏱️ Increased timeout for Render cold start
+  timeout: 20000,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
 });
 
-// Interceptors for better error messages
 api.interceptors.response.use(
-  (res) => res,
-  (err) => {
+  res => res,
+  err => {
     if (err.code === 'ECONNABORTED') {
       return Promise.reject(new Error('Request timed out. Please try again.'));
     }
@@ -38,7 +35,7 @@ const initialState = {
   loading: true,
   error: null,
   cart: [],
-  notification:"All"
+  notification: "All",
 };
 
 const foodReducer = (state, action) => {
@@ -85,42 +82,46 @@ const foodReducer = (state, action) => {
 export const FoodProvider = ({ children }) => {
   const [state, dispatch] = useReducer(foodReducer, initialState);
 
+  // 1️⃣ Load from localStorage first
+  useEffect(() => {
+    const cached = localStorage.getItem("cachedFoods");
+    if (cached) {
+      const data = JSON.parse(cached);
+      dispatch({ type: "SET_ITEMS", payload: data });
+    }
+  }, []);
+
+  // 2️⃣ Fetch latest data from API after cache render
   useEffect(() => {
     let isMounted = true;
 
     const fetchData = async () => {
       try {
+        toast.loading("Loading foods from server...", { id: "fetch" });
         const res = await api.get("/api/foods");
-        // console.log(res);
-        
-    
-        if (isMounted) {
-          if (res.data && Array.isArray(res.data)) {
-            dispatch({ type: "SET_ITEMS", payload: res.data });
-          } else {
-            throw new Error("Server response format is not correct.");
-          }
+
+        if (isMounted && res.data && Array.isArray(res.data)) {
+          // ✅ Set in state
+          dispatch({ type: "SET_ITEMS", payload: res.data });
+
+          // ✅ Save to localStorage
+          localStorage.setItem("cachedFoods", JSON.stringify(res.data));
         }
       } catch (error) {
-        console.error("Fetch Error:", error.message);
         dispatch({ type: "SET_ERROR", payload: error.message });
         toast.error(error.message);
+      } finally {
+        toast.dismiss("fetch");
       }
     };
 
-    if (navigator.onLine) {
-      toast.loading("Loading food items...", { id: "fetch" });
-      fetchData().finally(() => toast.dismiss("fetch"));
-    } else {
-      dispatch({ type: "SET_ERROR", payload: "No internet connection." });
-      toast.error("No internet connection.");
-    }
-
+    fetchData();
     return () => {
       isMounted = false;
     };
   }, []);
 
+  // 3️⃣ Filter update on category change
   useEffect(() => {
     dispatch({ type: "FILTER_ITEMS" });
   }, [state.comeCategory, state.allItems]);
