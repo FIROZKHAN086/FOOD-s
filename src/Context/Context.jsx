@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
-const url = "https://food-apps-653q.onrender.com"; // our deployed API
+const url = "https://food-apps-653q.onrender.com"; // our deployed API / Backend Sever
 
 const api = axios.create({
   baseURL: url,
