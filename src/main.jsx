@@ -4,9 +4,8 @@ import './index.css'
 import App from './App.jsx'
 import { FoodProvider } from './Context/Context.jsx'
 import { BrowserRouter } from 'react-router-dom'
-
-// 👇 Register service worker for PWA
 import { registerSW } from 'virtual:pwa-register'
+import React from 'react'
 
 registerSW({
   onOfflineReady() {
