@@ -17,7 +17,7 @@ const FoodMenu = ({ setItem }) => {
     cart,
   } = useFoodContext();
 
-  const categories = ['pizza', 'burger', 'sushi', 'thali'];
+  const categories = ['pizza', 'burger', 'sushi', 'thali' , 'Chicken'];
 
   if (loading) {
     return (

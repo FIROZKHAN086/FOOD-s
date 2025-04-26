@@ -13,7 +13,7 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useFoodContext } from "../Context/Context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { toast } from "react-hot-toast";
 
@@ -28,12 +28,14 @@ const Navbar = ({ setAuth, IsAdmin }) => {
       await signOut(auth);
       localStorage.clear();
       setIsDropdownOpen(false);
+      window.location.reload();
       toast.success("Logged out successfully");
     } catch (error) {
       console.error("Error signing out:", error);
       toast.error("Error signing out");
     }
   };
+
 
   const navLinks = [
     { label: "Home", to: "/", icon: <FaHome /> },
