@@ -15,7 +15,7 @@ import NotificationPage from './Page/Notification'
 import ReviewPage from './Page/Reviwe'
 import Account from './Page/Account'
 import Contact from './Page/Contact'
-import AboutPage from './Components/AboutPage'
+import  AboutPage from './Components/AboutPage'
 const App = () => {
   const [Auth, setAuth] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false);
@@ -32,41 +32,35 @@ const App = () => {
 
   return (
     <div>
-
       <Navbar setAuth={setAuth} IsAdmin={isAdmin} />
       {Auth ? <Authpage setAuth={setAuth} /> : <></>}
 
-     
-      
-      <Toaster
-  position="top-left"
-  reverseOrder={true}
-/>
+      <Toaster position="top-left" reverseOrder={true} />
       <Routes>
-        <Route path='/' element={<Home setItem={setItem} />} />
-        <Route path='/cart' element={<Cart />} />
-        <Route path='/checkout' element={<Chekout />} />
-        <Route path='/myorders' element={<MyOrders />} />
-        <Route path='/notification' element={<NotificationPage setAuth={setAuth} />} />
-        <Route path='/review' element={<ReviewPage />} />
-        <Route path='/account' element={<Account />} />
-        <Route path='/contact' element={<Contact/>} />
-        <Route path='/about' element={<AboutPage/>}/>
-        
-      
-        
+        <Route path="/" element={<Home setItem={setItem} />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Chekout />} />
+        <Route path="/myorders" element={<MyOrders />} />
+        <Route
+          path="/notification"
+          element={<NotificationPage setAuth={setAuth} />}
+        />
+        <Route path="/review" element={<ReviewPage />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/aboutPage" element={<AboutPage />} />
+        <Route path="/contact" element={<Contact />} />
 
         {isAdmin && (
           <>
-            <Route path='/admin' element={<AdminDashboard />} />
-            <Route path='/admin/foods' element={<ManageFoods />} />
-            <Route path='/admin/orders' element={<ManageOrders />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/foods" element={<ManageFoods />} />
+            <Route path="/admin/orders" element={<ManageOrders />} />
           </>
         )}
       </Routes>
-      <Footer/>
+      <Footer />
     </div>
-  )
+  );
 }
 
 

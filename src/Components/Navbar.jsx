@@ -38,7 +38,7 @@ const Navbar = ({ setAuth, IsAdmin }) => {
   const navLinks = [
     { label: "Home", to: "/", icon: <FaHome /> },
     { label: "Shop", to: "/", icon: <FaStore /> },
-    { label: "About", to: "/about", icon: <FaClipboardList /> },
+    { label: "About", to: "/aboutPage", icon: <FaClipboardList /> },
     { label: "Contact", to: "/contact", icon: <FaPhoneAlt /> },
   ];
 
