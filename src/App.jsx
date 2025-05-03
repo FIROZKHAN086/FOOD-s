@@ -18,6 +18,7 @@ import Contact from './Page/Contact'
 import  AboutPage from './Components/AboutPage'
 import PrivacyPolicy from './Pages/PrivacyPolicy'
 import TermsAndConditions from './Pages/TermsAndConditions'
+import { Analytics } from "@vercel/analytics/react"
 const App = () => {
   const [Auth, setAuth] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false);
@@ -34,6 +35,7 @@ const App = () => {
 
   return (
     <div>
+      <Analytics/>
       <Navbar setAuth={setAuth} IsAdmin={isAdmin} />
       {Auth ? <Authpage setAuth={setAuth} /> : <></>}
 
