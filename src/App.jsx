@@ -16,6 +16,8 @@ import ReviewPage from './Page/Reviwe'
 import Account from './Page/Account'
 import Contact from './Page/Contact'
 import  AboutPage from './Components/AboutPage'
+import PrivacyPolicy from './Pages/PrivacyPolicy'
+import TermsAndConditions from './Pages/TermsAndConditions'
 const App = () => {
   const [Auth, setAuth] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false);
@@ -49,6 +51,8 @@ const App = () => {
         <Route path="/account" element={<Account />} />
         <Route path="/aboutPage" element={<AboutPage />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path='/privacy' element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsAndConditions />} />
 
         {isAdmin && (
           <>

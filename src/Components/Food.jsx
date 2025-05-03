@@ -118,7 +118,7 @@ const FoodMenu = ({ setItem }) => {
                 grabCursor
                 centeredSlides
                 slidesPerView="auto"
-                loop
+                loop={category.length > 3}
                 autoplay={{ delay: 7000 }}
                 pagination={{ clickable: true }}
                 coverflowEffect={{

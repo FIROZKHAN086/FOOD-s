@@ -14,7 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import { useFoodContext } from "../Context/Context";
 import { useEffect, useState } from "react";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut ,onAuthStateChanged } from "firebase/auth";
 import { toast } from "react-hot-toast";
 
 const Navbar = ({ setAuth, IsAdmin }) => {
@@ -22,6 +22,14 @@ const Navbar = ({ setAuth, IsAdmin }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const auth = getAuth();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -113,7 +121,7 @@ const Navbar = ({ setAuth, IsAdmin }) => {
 
             {isDropdownOpen && (
               <div className="absolute right-0 mt-3 w-48 bg-white text-black rounded-lg shadow-xl py-2 z-50 animate-fadeIn">
-                {auth.currentUser ? (
+                {user ? (
                   <>
                     <Link
                       to="/myorders"
