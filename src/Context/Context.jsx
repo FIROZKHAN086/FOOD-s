@@ -6,7 +6,6 @@ const url = "https://food-apps-653q.onrender.com"; // our deployed API / Backend
 
 const api = axios.create({
   baseURL: url,
-  timeout: 20000,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',

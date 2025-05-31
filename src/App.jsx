@@ -19,6 +19,7 @@ import  AboutPage from './Components/AboutPage'
 import PrivacyPolicy from './Pages/PrivacyPolicy'
 import TermsAndConditions from './Pages/TermsAndConditions'
 import { Analytics } from "@vercel/analytics/react"
+
 const App = () => {
   const [Auth, setAuth] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false);
@@ -48,6 +49,7 @@ const App = () => {
           path="/notification"
           element={<NotificationPage setAuth={setAuth} />}
         />
+        {/* // loction */}
         <Route path="/review" element={<ReviewPage />} />
         <Route path="/account" element={<Account />} />
         <Route path="/aboutPage" element={<AboutPage />} />
